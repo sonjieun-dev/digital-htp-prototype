@@ -1,0 +1,134 @@
+{
+  "app": { "name": "House · Tree · Person Reflection Test" },
+  "common": { "continue": "Continue", "back": "Back", "next": "Next symbol" },
+  "sym": { "house": "House", "tree": "Tree", "person": "Person" },
+  "modeName": { "draw": "Draw mode", "image": "Image-choice mode", "hybrid": "Hybrid mode" },
+  "header": {
+    "rec": "Recording",
+    "recHint": "Your whole session — drawings, choices, timing, answers and chat — is being recorded for later expert review.",
+    "about": "About this experience"
+  },
+  "about": {
+    "eyebrow": "About this experience",
+    "title": "A symbolic self-reflection experience",
+    "p1": "This is a self-reflection experience inspired by the House-Tree-Person task. You draw or choose a house, a tree, and a person, then reflect on them in your own words while a chatbot asks gentle questions.",
+    "p2": "It is inspired by the practice of making vision or dream boards — choosing images that feel meaningful — rather than by clinical testing.",
+    "expertTitle": "AI does not make the final interpretation",
+    "expertBody": "The AI organizes observations, summarizes your words and suggests questions. Any meaningful interpretation requires review by a qualified expert in context.",
+    "privacy": "No real name is collected. Your session is stored anonymously under a random ID and you can download or delete it at the end.",
+    "close": "Got it"
+  },
+  "landing": {
+    "eyebrow": "House · Tree · Person · Reflection",
+    "headline": "Explore yourself through house, tree, and person symbols.",
+    "sub": "You can draw them yourself or choose images that feel meaningful to you. This experience is for self-reflection, not diagnosis.",
+    "recNote": "Your whole process is recorded for expert review",
+    "start": "Start reflection",
+    "learn": "Learn more",
+    "s1t": "Draw or choose", "s1d": "A house, a tree, and a person — in your own way.",
+    "s2t": "Reflect in words", "s2d": "Answer a few gentle questions about each one.",
+    "s3t": "Talk it through", "s3d": "A chatbot helps you notice — never diagnoses."
+  },
+  "consent": {
+    "eyebrow": "Step 1 — Consent",
+    "title": "Before we begin",
+    "intro": "This is a self-reflection experience, not a clinical or diagnostic test. Please read and confirm the following.",
+    "recEyebrow": "What is recorded",
+    "recBody": "Your full process is recorded: your drawings, the order and timing of your strokes, the images you choose, your written answers, and your chat with the AI. This record is kept so a qualified expert can review it later.",
+    "i1": "I understand this is a self-reflection experience and not a clinical diagnosis.",
+    "i2": "I understand my whole process — drawings, drawing order and timing, image choices, written answers, and chat — is recorded for this session.",
+    "i3": "I understand the AI does not provide a final interpretation, and that meaningful interpretation requires expert review.",
+    "i4": "Optional: I allow my anonymized session to be used for research."
+  },
+  "survey": {
+    "eyebrow": "Step 2 — A few anonymous details",
+    "title": "A little about you",
+    "sub": "No real name is needed. This helps an expert read your session in context. Answer only what you wish.",
+    "qAge": "Age range", "qGender": "Gender", "qMood": "Mood right now", "qComfort": "Comfort with drawing",
+    "female": "Female", "male": "Male", "nonbinary": "Non-binary", "na": "Prefer not to say", "selfdesc": "Self-describe",
+    "calm": "Calm", "tired": "Tired", "curious": "Curious", "anxious": "Anxious", "hopeful": "Hopeful", "other": "Other",
+    "comfortable": "Comfortable", "neutral": "Neutral", "notconf": "Not confident"
+  },
+  "mode": {
+    "eyebrow": "Step 3 — Choose how to reflect",
+    "title": "How would you like to begin?",
+    "sub": "Each path moves through house, tree, and person. There is no right choice — pick what feels natural.",
+    "bestFor": "Best for",
+    "drawT": "Draw your own", "drawD": "Use a simple black pen and eraser to draw a house, a tree, and a person.", "drawB": "expressive, process-based reflection",
+    "imgT": "Choose meaningful images", "imgD": "Like a vision board — select or upload images of a house, tree, and person that feel close to you.", "imgB": "visual preference & symbolic choice",
+    "hybT": "Draw + choose", "hybD": "Draw each symbol first, then choose an image that resonates with it.", "hybB": "comparing expression and selection",
+    "recordingNote": "Whichever you choose, your process is recorded for later expert review."
+  },
+  "task": {
+    "step1": "Step 1 of 3 · House", "step2": "Step 2 of 3 · Tree", "step3": "Step 3 of 3 · Person",
+    "pen": "Pen", "eraser": "Eraser", "undo": "Undo", "clear": "Clear",
+    "capturing": "Recording your process", "strokes": "strokes",
+    "askHint": "There is no right way — draw it however you like.",
+    "drawHouse": "Please draw a house. It does not need to be artistic — draw it in your own way.",
+    "drawTree": "Please draw a tree. It does not need to be realistic — draw it naturally.",
+    "drawPerson": "Please draw a whole person, not only a head or face. It does not need to be perfect.",
+    "toImage": "Now choose an image"
+  },
+  "image": {
+    "instruction": "Choose the image that feels most meaningful to you right now. You do not need to explain it perfectly.",
+    "house": "Choose a house that feels meaningful", "tree": "Choose a tree that feels meaningful", "person": "Choose a person that feels meaningful",
+    "curatedLabel": "Or pick a starting point from the curated set",
+    "searchUnsplash": "Search Unsplash", "searchGoogle": "Search Google", "upload": "Upload your own",
+    "chosen": "Your choice", "srcUpload": "Uploaded image", "srcCurated": "Curated set"
+  },
+  "followup": {
+    "title": "A few words on what you made",
+    "sub": "Your own explanation matters more than the image alone. Write freely — short is fine.",
+    "placeholder": "Write in your own words…",
+    "toReflect": "See my reflection"
+  },
+  "fq": {
+    "house1": "Whose house is this, or who might live here?",
+    "house2": "What is the weather or atmosphere around this house?",
+    "house3": "What does this house need?",
+    "house4": "Why did you draw or choose this house?",
+    "tree1": "What type of tree is this, and where does it live?",
+    "tree2": "What is this tree feeling?",
+    "tree3": "What does this tree need?",
+    "tree4": "Why did you draw or choose this tree?",
+    "person1": "Who might this person be, and what are they doing?",
+    "person2": "What is this person feeling?",
+    "person3": "What does this person need?",
+    "person4": "Why did you draw or choose this person?",
+    "hyb1": "How is your drawing similar to the image you chose?",
+    "hyb2": "How is it different?",
+    "hyb3": "Which one feels closer to you right now?"
+  },
+  "reflect": {
+    "loadingTitle": "Organizing your session…",
+    "loadingSub": "Gathering observations, your words, and reflection questions.",
+    "badge": "Expert review needed",
+    "title": "Your reflection, organized",
+    "disclaimer": "This experience uses AI to organize visual observations, your explanations, and reflective questions. The AI does not provide a final psychological interpretation — any meaningful interpretation should be reviewed by a qualified expert in context.",
+    "s1": "What can be observed", "s2": "Your words matter", "s3": "Symbolic reflection prompts",
+    "s4": "Questions to sit with", "s5": "Preliminary summary for expert review", "s6": "A small action",
+    "prelimTag": "Preliminary · not a final interpretation",
+    "safetyTitle": "Safety note",
+    "safety": "This reflection is not a diagnosis. It is a symbolic reading based on your drawings or image choices and your own explanations, prepared for review by a qualified expert.",
+    "openChat": "Continue with the chatbot", "toExport": "Skip to export"
+  },
+  "chat": {
+    "title": "Reflect together",
+    "sub": "Ask anything about your session. I can help you notice and organize — but I will not give a final interpretation.",
+    "greeting": "I have gathered your house, tree, and person, along with your own words. Where would you like to begin? I can help you notice patterns, but your explanations matter most.",
+    "thinking": "thinking",
+    "quick": ["Ask me one deeper question", "Compare my house, tree and person", "Summarize my current theme", "Give me a gentle action step", "What should I explore next?"],
+    "placeholder": "Type your message…",
+    "finish": "Finish & export",
+    "fallback": "I can help you notice features, summarize your own words, and suggest reflection questions — but I cannot give a final psychological interpretation. A qualified expert should review this in context. (Live AI is unavailable right now.)"
+  },
+  "export": {
+    "eyebrow": "Step 4 — Save & share",
+    "title": "Your reflection card",
+    "sub": "A summary of your session, ready to keep or hand to an expert reviewer. The full record can be downloaded as data.",
+    "processLabel": "Recorded process", "themeLabel": "A question to carry", "id": "ID",
+    "cardSafety": "Not a diagnosis. Prepared for expert review.",
+    "print": "Print / save as PDF", "download": "Download session data", "restart": "Start over",
+    "dataNote": "Stored: anonymous demographics, drawings, selected images, follow-up answers, and AI chat history — under a random ID with no real name. You can download or discard it here."
+  }
+}

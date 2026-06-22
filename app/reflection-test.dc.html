@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Digital HTP | Jieun Son</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Hanken+Grotesque:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&family=Noto+Serif+KR:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:#FFFFFF}
+::selection{background:#16140F;color:#fff}
+@keyframes recpulse{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+textarea,input,button{font-family:inherit}
+textarea:focus,input:focus{outline:none}
+textarea::placeholder,input::placeholder{color:#B5AFA2}
+@media print{.no-print{display:none!important}.print-card{box-shadow:none!important;border:1px solid #ccc!important}}
+</style>
+</helmet>
+
+<div style="font-family:'Hanken Grotesque','Noto Sans KR',sans-serif;color:#16140F;background:#FFFFFF;min-height:100vh;-webkit-font-smoothing:antialiased">
+  <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#16140F"/><polygon points="50,30 70,68 30,68" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></svg></template>
+
+  <!-- ============ HEADER ============ -->
+  <header class="no-print" style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 28px;background:rgba(255,255,255,.85);backdrop-filter:blur(14px);border-bottom:1px solid #EFEBE2">
+    <div style="display:flex;align-items:center;gap:14px;min-width:0">
+      <div style="width:30px;height:30px;border:1.5px solid #16140F;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex:none">▲</div>
+      <div style="font-family:Newsreader,'Noto Serif KR',serif;font-weight:500;font-size:17px;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.app.name }}</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex:none">
+      <div title="{{ t.header.recHint }}" style="display:flex;align-items:center;gap:7px;padding:7px 12px;border:1px solid #EAE5D9;border-radius:999px;background:#fff">
+        <span style="width:8px;height:8px;border-radius:50%;background:#16140F;animation:recpulse 1.8s ease-in-out infinite"></span>
+        <span style="font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#6B6557">{{ t.header.rec }}</span>
+      </div>
+      <div style="display:flex;border:1px solid #EAE5D9;border-radius:999px;overflow:hidden;background:#fff">
+        <button onClick="{{ setEn }}" style="{{ enStyle }}">EN</button>
+        <button onClick="{{ setKo }}" style="{{ koStyle }}">KO</button>
+      </div>
+      <button onClick="{{ openAISettings }}" title="{{ t.header.aiSettings }}" style="height:36px;border-radius:999px;border:1px solid #EAE5D9;background:#fff;cursor:pointer;font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.08em;color:#16140F;padding:0 12px">{{ aiStatusLabel }}</button>
+      <button onClick="{{ openAbout }}" title="{{ t.header.about }}" style="width:36px;height:36px;border-radius:50%;border:1px solid #EAE5D9;background:#fff;cursor:pointer;font-family:Newsreader,serif;font-size:15px;font-style:italic;color:#16140F">i</button>
+    </div>
+  </header>
+  <div class="no-print" style="height:2px;background:#F0ECE3"><div style="height:100%;background:#16140F;width:{{ progressPct }};transition:width .5s cubic-bezier(.4,0,.2,1)"></div></div>
+
+  <!-- ============ ABOUT MODAL ============ -->
+  <sc-if value="{{ showAbout }}" hint-placeholder-val="{{ false }}">
+    <div class="no-print" onClick="{{ closeAbout }}" style="position:fixed;inset:0;z-index:60;background:rgba(22,20,15,.4);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px">
+      <div onClick="{{ stop }}" style="background:#fff;border:1px solid #EFEBE2;border-radius:22px;max-width:540px;width:100%;max-height:86vh;overflow:auto;padding:38px;box-shadow:0 30px 80px -20px rgba(0,0,0,.4);animation:fadeUp .35s ease">
+        <div style="font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#9A9384;margin-bottom:14px">{{ t.about.eyebrow }}</div>
+        <h2 style="font-family:Newsreader,'Noto Serif KR',serif;font-weight:500;font-size:28px;margin:0 0 18px;line-height:1.2">{{ t.about.title }}</h2>
+        <p style="font-size:15px;line-height:1.65;color:#3E3A31;margin:0 0 16px">{{ t.about.p1 }}</p>
+        <p style="font-size:15px;line-height:1.65;color:#3E3A31;margin:0 0 16px">{{ t.about.p2 }}</p>
+        <div style="background:#FAF8F3;border:1px solid #EFEBE2;border-radius:14px;padding:16px 18px;margin:0 0 16px">
+          <div style="font-weight:600;font-size:14px;margin-bottom:6px">{{ t.about.expertTitle }}</div>
+          <p style="font-size:14px;line-height:1.6;color:#6B6557;margin:0">{{ t.about.expertBody }}</p>
+        </div>
+        <p style="font-size:13px;line-height:1.6;color:#8A8475;margin:0 0 22px">{{ t.about.privacy }}</p>
+        <button onClick="{{ closeAbout }}" style="display:inline-flex;align-items:center;background:#16140F;color:#fff;border:none;border-radius:999px;padding:13px 26px;font-weight:600;font-size:14px;cursor:pointer">{{ t.about.close }}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ AI SETTINGS MODAL ============ -->
+  <sc-if value="{{ showAISettings }}" hint-placeholder-val="{{ false }}">
+    <div class="no-print" onClick="{{ closeAISettings }}" style="position:fixed;inset:0;z-index:65;background:rgba(22,20,15,.42);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px">
+      <div onClick="{{ stop }}" style="background:#fff;border:1px solid #EFEBE2;border-radius:22px;max-width:620px;width:100%;max-height:86vh;overflow:auto;padding:34px;box-shadow:0 30px 80px -20px rgba(0,0,0,.42);animation:fadeUp .35s ease">
+        <div style="font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#9A9384;margin-bottom:14px">{{ t.ai.eyebrow }}</div>
+        <h2 style="font-family:Newsreader,'Noto Serif KR',serif;font-weight:500;font-size:28px;margin:0 0 12px;line-height:1.2">{{ t.ai.title }}</h2>
+        <p style="font-size:14.5px;line-height:1.65;color:#4A463C;margin:0 0 18px">{{ t.ai.body }}</p>
+        <div style="background:#FAF8F3;border:1px solid #EFEBE2;border-radius:14px;padding:14px 16px;margin:0 0 18px">
+          <div style="font-weight:700;font-size:13px;margin-bottom:5px">{{ t.ai.status }}: {{ aiProviderStatus }}</div>
+          <p style="font-size:12.5px;line-height:1.55;color:#6B6557;margin:0">{{ t.ai.privacy }}</p>
+        </div>
+        <label style="display:block;font-size:12px;font-weight:700;color:#6B6557;margin:0 0 6px">{{ t.ai.provider }}</label>
+        <select value="{{ aiProvider }}" onChange="{{ setAIProvider }}" style="width:100%;border:1px solid #EAE5D9;border-radius:12px;padding:12px 13px;background:#fff;color:#16140F;font-size:14px;margin-bottom:14px">
+          <option value="auto">Auto: GPT/OpenAI bridge → browser API key → Claude helper → fallback</option>
+          <option value="openai">OpenAI / GPT</option>
+          <option value="claude">Claude helper</option>
+          <option value="fallback">Fallback only</option>
+        </select>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+          <div>
+            <label style="display:block;font-size:12px;font-weight:700;color:#6B6557;margin:0 0 6px">{{ t.ai.model }}</label>
+            <input value="{{ aiModel }}" onInput="{{ setAIModel }}" placeholder="gpt-4.1-mini" style="width:100%;border:1px solid #EAE5D9;border-radius:12px;padding:12px 13px;background:#fff;color:#16140F;font-size:14px">
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;font-weight:700;color:#6B6557;margin:0 0 6px">{{ t.ai.endpoint }}</label>
+            <input value="{{ aiEndpoint }}" onInput="{{ setAIEndpoint }}" placeholder="https://api.openai.com/v1/chat/completions" style="width:100%;border:1px solid #EAE5D9;border-radius:12px;padding:12px 13px;background:#fff;color:#16140F;font-size:14px">
+          </div>
+        </div>
+        <label style="display:block;font-size:12px;font-weight:700;color:#6B6557;margin:0 0 6px">{{ t.ai.key }}</label>
+        <input value="{{ aiKey }}" onInput="{{ setAIKey }}" type="password" placeholder="sk-..." style="width:100%;border:1px solid #EAE5D9;border-radius:12px;padding:12px 13px;background:#fff;color:#16140F;font-size:14px;margin-bottom:12px">
+        <p style="font-size:12.5px;line-height:1.55;color:#9A9384;margin:0 0 22px">{{ t.ai.note }}</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button onClick="{{ saveAISettings }}" style="display:inline-flex;align-items:center;background:#16140F;color:#fff;border:none;border-radius:999px;padding:13px 24px;font-weight:600;font-size:14px;cursor:pointer">{{ t.ai.save }}</button>
+          <button onClick="{{ clearAISettings }}" style="display:inline-flex;align-items:center;background:#fff;color:#16140F;border:1px solid rgba(22,20,15,.24);border-radius:999px;padding:13px 20px;font-weight:600;font-size:14px;cursor:pointer">{{ t.ai.clear }}</button>
+          <button onClick="{{ closeAISettings }}" style="display:inline-flex;align-items:center;background:none;color:#8A8475;border:none;padding:13px 10px;font-weight:600;font-size:14px;cursor:pointer">{{ t.ai.close }}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ LANDING ============ -->
+  <sc-if value="{{ isLanding }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:760px;margin:0 auto;padding:84px 24px 96px;text-align:center;animation:fadeUp .5s ease">
+      <div style="font-family:'Spline Sans Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#9A9384;margin-bottom:26px">{{ t.landing.eyebrow }}</div>
+      <h1 style="font-family:Newsreader,'Noto Serif KR',serif;font-weight:500;font-size:54px;line-height:1.1;letter-spacing:-.01em;margin:0 0 26px;text-wrap:balance">{{ t.landing.headline }}</h1>
+      <p style="font-size:19px;line-height:1.6;color:#4A463C;max-width:560px;margin:0 auto 22px;text-wrap:pretty">{{ t.landing.sub }}</p>
+      <div style="display:inline-flex;align-items:center;gap:8px;font-family:'Spline Sans Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#6B6557;background:#FAF8F3;border:1px solid #EAE5D9;border-radius:999px;padding:8px 16px;margin-bottom:40px">⦿ {{ t.landing.recNote }}</div>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+        <button onClick="{{ start }}" style="display:inline-flex;align-items:center;gap:10px;background:#16140F;color:#fff;border:none;border-radius:999px;padding:17px 34px;font-weight:600;font-size:16px;cursor:pointer" style-hover="background:#2c2820">{{ t.landing.start }} →</button>
+        <button onClick="{{ openAbout }}" style="display:inline-flex;align-items:center;background:transparent;color:#16140F;border:1px solid rgba(22,20,15,.24);border-radius:999px;padding:17px 30px;font-weight:600;font-size:16px;cursor:pointer" style-hover="background:#FAF8F3">{{ t.landing.learn }}</button>
+      </div>
+      <div style="display:flex;gap:36px;justify-content:center;margin-top:72px;flex-wrap:wrap">
+        <sc-for list="{{ landingSteps }}" as="s" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;max-width:160px">
+            <div style="width:48px;height:48px;border:1.5px solid #16140F;border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:Newsreader,serif;font-size:24px">{{ s.glyph }}</div>
+            <div style="font-weight:600;font-size:14px">{{ s.title }}</div>
+            <div style="font-size:13px;line-height:1.5;color:#8A8475">{{ s.desc }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ CONSENT ============ -->
+  <sc-if value="{{ isConsent }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:640px;margin:0 auto;padding:56px 24px 96px;animation:fadeUp .45s ease">
+      <div style="font-family:'Spline Sans Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9A9384;margin-bottom:16px">{{ t.consent.eyebrow }}</div>
+      <h1 style="font-family:Newsreader,'Noto Serif KR',serif;font-weight:500;font-size:36px;line-height:1.15;margin:0 0 14px">{{ t.consent.title }}</h1>
+      <p style="font-size:16px;line-height:1.6;color:#4A463C;margin:0 0 28px">{{ t.consent.intro }}</p>
+      <div style="background:#16140F;color:#fff;border-radius:16px;padding:22px 24px;margin:0 0 24px">
+        <div style="font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-bottom:10px">{{ t.consent.recEyebrow }}</div>
+        <p style="font-size:15px;line-height:1.6;margin:0;opacity:.92">{{ t.consent.recBody }}</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:30px">
+        <sc-for list="{{ consentItems }}" as="c" hint-placeholder-count="4">
+          <button onClick="{{ c.toggle }}" style="{{ c.style }}">
+            <span style="{{ c.box }}">{{ c.check }}</span>
+            <span style="font-size:14.5px;line-height:1.55;text-align:left">{{ c.label }}</span>
+          </button>
+        </sc-for>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <button onClick="{{ consentContinue }}" style="{{ consentBtnStyle }}">{{ t.common.continue }} →</button>
+        <button onClick="{{ back }}" style="background:none;border:none;color:#8A8475;font-weight:600;font-size:14px;cursor:pointer;padding:8px">← {{ t.common.back }}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ SURVEY ============ -->
+  <sc-if value="{{ isSurvey }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:640px;margin:0 auto;padding:56px 24px 96px;animation:fadeUp .45s ease">
+      <div style="font-family:'Spline Sans Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9A9384;margin-bottom:16px">{{ t.survey.eyebrow }}</div>
+      <h1 style="font-family:Newsreader,'Noto Serif KR',serif;font-weight:500;font-size:36px;line-height:1.15;margin:0 0 12px">{{ t.survey.title }}</h1>
+      <p style="font-size:16px;line-height:1.6;color:#4A463C;margin:0 0 34px">{{ t.survey.sub }}</p>
+      <sc-for list="{{ surveyGroups }}" as="g" hint-placeholder-count="4">
+        <div style="margin-bottom:28px">
+          <div style="font-weight:600;font-size:15px;margin-bottom:12px">{{ g.label }}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:9px">
+            <sc-for list="{{ g.options }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+      <div style="display:flex;align-items:center;gap:16px;margin-top:14px;flex-wrap:wrap">
+        <button onClick="{{ surveyContinue }}" style="{{ surveyBtnStyle }}">{{ t.common.continue }} →</button>
+        <button onClick="{{ back }}" style="background:none;border:none;color:#8A8475;font-weight:600;font-size:14px;cursor:pointer;padding:8px">← {{ t.common.back }}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ MODE SELECT ============ -->
+  <sc-if value="{{ isMode }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:920px;margin:0 auto;padding:56px 24px 96px;animation:fadeUp .45s ease">
+      <div style="text-align:center;margin-bottom:14px;font-family:'Spline Sans Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9A9384">{{ t.mode.eyebrow }}</div>
+      <h1 style="font-family:Newsreader,'Noto Serif KR',serif;font-weight:500;font-size:38px;line-height:1.12;margin:0 0 12px;text-align:center">{{ t.mode.title }}</h1>
+      <p style="font-size:16px;line-height:1.6;color:#4A463C;margin:0 auto 40px;text-align:center;max-width:520px">{{ t.mode.sub }}</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+        <sc-for list="{{ modeCards }}" as="m" hint-placeholder-count="3">
+          <button onClick="{{ m.onClick }}" style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:14px;background:#fff;border:1px solid #EAE5D9;border-radius:20px;padding:26px 24px;cursor:pointer;box-shadow:0 1px 2px rgba(30,26,18,.04),0 18px 40px -30px rgba(30,26,18,.3);transition:transform .25s,box-shadow .25s,border-color .25s" style-hover="transform:translateY(-4px);border-color:#16140F;box-shadow:0 1px 2px rgba(30,26,18,.04),0 26px 50px -28px rgba(30,26,18,.4)">
+            <div style="width:46px;height:46px;border:1.5px solid #16140F;border-radius:13px;display:flex;align-items:center;justify-content:center;font-family:Newsreader,serif;font-size:23px">{{ m.glyph }}</div>
+            <div style="font-family:Newsreader,'Noto Serif KR',serif;font-weight:500;font-size:21px">{{ m.title }}</div>
+            <div style="font-size:14px;line-height:1.55;color:#6B6557;min-height:84px">{{ m.desc }}</div>
+            <div style="font-family:'Spline Sans Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#9A9384;border-top:1px solid #F0ECE3;padding-top:12px;width:100%">{{ t.mode.bestFor }} {{ m.best }}</div>
+          </button>
+        </sc-for>
+      </div>
+      <div style="text-align:center;margin-top:26px;font-size:13px;color:#8A8475">{{ t.mode.recordingNote }}</div>
+      <div style="text-align:center;margin-top:14px"><button onClick="{{ back }}" style="background:none;border:none;color:#8A8475;font-weight:600;font-size:14px;cursor:pointer;padding:8px">← {{ t.common.back }}</button></div>
+    </div>
+  </sc-if>
+
+  <!-- ============ TASK ============ -->
+  <sc-if value="{{ isTask }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:860px;margin:0 auto;padding:40px 24px 96px;animation:fadeUp .4s ease">
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:26px;flex-wrap:wrap">
+        <sc-for list="{{ symbolDots }}" as="d" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="{{ d.dot }}">{{ d.glyph }}</div>
+            <span style="{{ d.lbl }}">{{ d.name }}</span>
+          </div>
+          <sc-if value="{{ d.sep }}" hint-placeholder-val="{{ false }}"><span style="width:22px;height:1px;background:#E4DFD2"></span></sc-if>
+        </sc-for>
+      </div>
+
+      <!-- DRAW phase -->
+      <sc-if value="{{ showDraw }}" hint-placeholder-val="{{ false }}">
+        <div style="font-family:'Spline Sans Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#9A9384;text-align:center;margin-bottom:8px">{{ stepLabel }}</div>
+        <h2 style="font-family:Newsreader,'Noto Serif KR',serif;font-weight:500;font-size:26px;line-height:1.3;margin:0 auto 22px;text-align:center;max-width:560px;text-wrap:pretty">{{ drawPrompt }}</h2>
+        <div style="background:#fff;border:1px solid #EAE5D9;border-radius:20px;padding:14px;box-shadow:0 1px 2px rgba(30,26,18,.04),0 18px 40px -30px rgba(30,26,18,.3)">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 8px 12px;flex-wrap:wrap">
+            <div style="display:flex;gap:8px;align-items:center">
+              <button onClick="{{ setPen }}" style="{{ penStyle }}">✎ {{ t.task.pen }}</button>
+              <button onClick="{{ setEraser }}" style="{{ eraserStyle }}">⌫ {{ t.task.eraser }}</button>
+              <div style="display:flex;gap:5px;align-items:center;margin-left:6px">
+                <sc-for list="{{ widthOptions }}" as="w" hint-placeholder-count="3">
+                  <button onClick="{{ w.onClick }}" title="{{ w.label }}" style="{{ w.style }}"><span style="{{ w.dot }}"></span></button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <button onClick="{{ undo }}" style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #EAE5D9;border-radius:10px;padding:9px 14px;font-weight:600;font-size:13px;cursor:pointer;color:#3E3A31" style-hover="background:#FAF8F3">↶ {{ t.task.undo }}</button>
+              <button onClick="{{ clearCanvas }}" style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #EAE5D9;border-radius:10px;padding:9px 14px;font-weight:600;font-size:13px;cursor:pointer;color:#3E3A31" style-hover="background:#FAF8F3">✕ {{ t.task.clear }}</button>
+            </div>
+          </div>
+          <canvas ref="{{ canvasRef }}" style="display:block;width:100%;height:440px;background:#fff;border:1px solid #F0ECE3;border-radius:12px;cursor:crosshair;touch-action:none"></canvas>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 8px 4px;gap:12px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:8px;font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.06em;color:#9A9384">
+              <span style="width:7px;height:7px;border-radius:50%;background:#16140F;animation:recpulse 1.8s infinite"></span>{{ t.task.capturing }} · {{ strokeCount }} {{ t.task.strokes }}
+            </div>
+            <div style="font-size:12.5px;color:#B0A99A;font-style:italic;font-family:Newsreader,serif">{{ t.task.askHint }}</div>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:24px">
+          <button onClick="{{ drawNext }}" style="{{ drawNextStyle }}">{{ drawNextLabel }} →</button>
+        </div>
+      </sc-if>
+
+      <!-- IMAGE phase -->
+      <sc-if value="{{ showImage }}" hint-placeholder-val="{{ false }}">
+        <div style="font-family:'Spline Sans Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#9A9384;text-align:center;margin-bottom:8px">{{ stepLabel }}</div>
+        <h2 style="font-family:Newsreader,'Noto Serif KR',serif;font-weight:500;font-size:26px;line-height:1.3;margin:0 auto 8px;text-align:center;max-width:600px;text-wrap:pretty">{{ imagePrompt }}</h2>
+        <p style="font-size:15px;line-height:1.6;color:#6B6557;text-align:center;max-width:540px;margin:0 auto 28px">{{ t.image.instruction }}</p>
+
+        <!-- chosen preview -->
+        <sc-if value="{{ hasSelection }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:18px;background:#fff;border:1px solid #16140F;border-radius:18px;padding:16px;margin-bottom:24px;max-width:560px;margin-left:auto;margin-right:auto">
+            <div style="{{ selThumbStyle }}">{{ selThumbGlyph }}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-family:'Spline Sans Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#9A9384;margin-bottom:4px">{{ t.image.chosen }}</div>
+              <div style="font-weight:600;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ selLabel }}</div>
+              <div style="font-size:12.5px;color:#8A8475">{{ selSource }}</div>
+            </div>
+            <button onClick="{{ clearSelection }}" style="background:#fff;border:1px solid #EAE5D9;border-radius:10px;padding:8px 12px;font-weight:600;font-size:12.5px;cursor:pointer;color:#6B6557">✕</button>
+          </div>
+        </sc-if>
+
+        <!-- search + upload bar -->
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:22px">
+          <button onClick="{{ openUnsplash }}" style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #EAE5D9;border-radius:999px;padding:11px 18px;font-weight:600;font-size:13.5px;cursor:pointer;color:#16140F" style-hover="border-color:#16140F">⌕ {{ t.image.searchUnsplash }}</button>
+          <button onClick="{{ openGoogle }}" style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #EAE5D9;border-radius:999px;padding:11px 18px;font-weight:600;font-size:13.5px;cursor:pointer;color:#16140F" style-hover="border-color:#16140F">⌕ {{ t.image.searchGoogle }}</button>
+          <button onClick="{{ triggerUpload }}" style="display:inline-flex;align-items:center;gap:8px;background:#16140F;color:#fff;border:none;border-radius:999px;padding:11px 20px;font-weight:600;font-size:13.5px;cursor:pointer">↑ {{ t.image.upload }}</button>
+          <input ref="{{ fileRef }}" type="file" accept="image/*" onChange="{{ onUpload }}" style="display:none"/>
+        </div>
+        <div style="font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9A9384;text-align:center;margin-bottom:14px">{{ t.image.curatedLabel }}</div>
+
+        <!-- curated grid -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+          <sc-for list="{{ curatedTiles }}" as="tile" hint-placeholder-count="8">
+            <button onClick="{{ tile.onClick }}" style="{{ tile.style }}">
+              <div style="{{ tile.swatch }}"></div>
+              <sc-if value="{{ tile.selected }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:#16140F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px">✓</div></sc-if>
+              <span style="font-family:'Spline Sans Mono',monospace;font-size:11px;color:#3E3A31;padding:9px 4px;text-align:center;line-height:1.3">{{ tile.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="text-align:center;margin-top:30px">
+          <button onClick="{{ imageNext }}" style="{{ imageNextStyle }}">{{ imageNextLabel }} →</button>
+        </div>
+      </sc-if>
+
+      <!-- FOLLOWUP phase -->
+      <sc-if value="{{ showFollowup }}" hint-placeholder-val="{{ false }}">
+        <div style="font-family:'Spline Sans Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#9A9384;text-align:center;margin-bottom:8px">{{ stepLabel }}</div>
+        <h2 style="font-family:Newsreader,'Noto Serif KR',serif;font-weight:500;font-size:26px;line-height:1.3;margin:0 auto 6px;text-align:center;max-width:560px">{{ t.followup.title }}</h2>
+        <p style="font-size:15px;line-height:1.6;color:#6B6557;text-align:center;max-width:520px;margin:0 auto 30px">{{ t.followup.sub }}</p>
+        <div style="max-width:600px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
+          <sc-for list="{{ followQuestions }}" as="q" hint-placeholder-count="4">
+            <div style="background:#fff;border:1px solid #EAE5D9;border-radius:16px;padding:20px 22px">
+              <label style="display:block;font-family:Newsreader,'Noto Serif KR',serif;font-size:18px;line-height:1.4;margin-bottom:12px">{{ q.label }}</label>
+              <textarea value="{{ q.value }}" onInput="{{ q.onInput }}" placeholder="{{ t.followup.placeholder }}" rows="2" style="width:100%;resize:vertical;border:1px solid #EAE5D9;border-radius:10px;padding:12px 14px;font-size:15px;line-height:1.5;color:#16140F;background:#FCFBF8" style-focus="border-color:#16140F"></textarea>
+            </div>
+          </sc-for>
+        </div>
+        <div style="text-align:center;margin-top:28px">
+          <button onClick="{{ followupContinue }}" style="display:inline-flex;align-items:center;gap:10px;background:#16140F;color:#fff;border:none;border-radius:999px;padding:16px 30px;font-weight:600;font-size:15px;cursor:pointer">{{ followupNextLabel }} →</button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ============ REFLECTION ============ -->
+  <sc-if value="{{ isReflect }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:720px;margin:0 auto;padding:48px 24px 96px;animation:fadeUp .45s ease">
+      <sc-if value="{{ reflectLoading }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;padding:80px 0">
+          <div style="width:34px;height:34px;border:2.5px solid #EAE5D9;border-top-color:#16140F;border-radius:50%;margin:0 auto 22px;animation:spin 1s linear infinite"></div>
+          <div style="font-family:Newsreader,'Noto Serif KR',serif;font-size:22px;margin-bottom:8px">{{ t.reflect.loadingTitle }}</div>
+          <div style="font-size:14px;color:#8A8475">{{ t.reflect.loadingSub }}</div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ reflectReady }}" hint-placeholder-val="{{ false }}">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:#16140F;color:#fff;border-radius:999px;padding:9px 16px;font-family:'Spline Sans Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:18px">⚑ {{ t.reflect.badge }}</div>
+        <h1 style="font-family:Newsreader,'Noto Serif KR',serif;font-weight:500;font-size:38px;line-height:1.12;margin:0 0 12px">{{ t.reflect.title }}</h1>
+        <p style="font-size:15px;line-height:1.6;color:#6B6557;margin:0 0 14px">{{ t.reflect.disclaimer }}</p>
+        <div style="border-top:1px solid #F0ECE3;margin-bottom:30px"></div>
+
+        <sc-for list="{{ reflectSections }}" as="sec" hint-placeholder-count="5">
+          <div style="margin-bottom:30px">
+            <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:14px">
+              <span style="font-family:'Spline Sans Mono',monospace;font-size:12px;color:#B5AFA2">{{ sec.num }}</span>
+              <h3 style="font-family:Newsreader,'Noto Serif KR',serif;font-weight:500;font-size:23px;margin:0">{{ sec.title }}</h3>
+            </div>
+            <div style="{{ sec.boxStyle }}">
+              <sc-for list="{{ sec.blocks }}" as="b" hint-placeholder-count="3">
+                <div style="margin-bottom:10px">
+                  <sc-if value="{{ b.hasHead }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Spline Sans Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#9A9384;margin-bottom:4px">{{ b.head }}</div></sc-if>
+                  <p style="font-size:15.5px;line-height:1.65;color:#33302A;margin:0">{{ b.text }}</p>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+
+        <div style="background:#FAF8F3;border:1px solid #EFEBE2;border-radius:16px;padding:20px 22px;margin-bottom:26px">
+          <div style="font-weight:700;font-size:13px;margin-bottom:8px">⚑ {{ t.reflect.safetyTitle }}</div>
+          <p style="font-size:14px;line-height:1.6;color:#6B6557;margin:0">{{ t.reflect.safety }}</p>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button onClick="{{ goChat }}" style="display:inline-flex;align-items:center;gap:10px;background:#16140F;color:#fff;border:none;border-radius:999px;padding:16px 28px;font-weight:600;font-size:15px;cursor:pointer">{{ t.reflect.openChat }} →</button>
+          <button onClick="{{ goExport }}" style="display:inline-flex;align-items:center;background:transparent;color:#16140F;border:1px solid rgba(22,20,15,.24);border-radius:999px;padding:16px 26px;font-weight:600;font-size:15px;cursor:pointer" style-hover="background:#FAF8F3">{{ t.reflect.toExport }}</button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ============ CHAT ============ -->
+  <sc-if value="{{ isChat }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:720px;margin:0 auto;padding:36px 24px 96px;animation:fadeUp .45s ease">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:6px;flex-wrap:wrap">
+        <h1 style="font-family:Newsreader,'Noto Serif KR',serif;font-weight:500;font-size:30px;margin:0">{{ t.chat.title }}</h1>
+        <div style="display:inline-flex;align-items:center;gap:7px;background:#FAF8F3;border:1px solid #EAE5D9;border-radius:999px;padding:7px 13px;font-family:'Spline Sans Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#6B6557">⚑ {{ t.reflect.badge }}</div>
+      </div>
+      <p style="font-size:14.5px;line-height:1.6;color:#6B6557;margin:0 0 22px">{{ t.chat.sub }}</p>
+
+      <div style="background:#fff;border:1px solid #EAE5D9;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:16px;min-height:300px">
+        <sc-for list="{{ chatMessages }}" as="msg" hint-placeholder-count="2">
+          <div style="{{ msg.row }}">
+            <div style="{{ msg.bubble }}">{{ msg.content }}</div>
+          </div>
+        </sc-for>
+        <sc-if value="{{ chatLoading }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;justify-content:flex-start"><div style="background:#F6F4EF;border-radius:14px;padding:14px 18px;font-family:'Spline Sans Mono',monospace;font-size:13px;color:#8A8475"><span style="animation:blink 1.2s infinite">●</span> {{ t.chat.thinking }}</div></div>
+        </sc-if>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:18px 0">
+        <sc-for list="{{ quickReplies }}" as="q" hint-placeholder-count="4">
+          <button onClick="{{ q.onClick }}" style="background:#fff;border:1px solid #EAE5D9;border-radius:999px;padding:9px 15px;font-weight:500;font-size:13px;cursor:pointer;color:#3E3A31" style-hover="border-color:#16140F;background:#FAF8F3">{{ q.label }}</button>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:flex-end;background:#fff;border:1px solid #EAE5D9;border-radius:16px;padding:10px 10px 10px 16px" style-focus-within="border-color:#16140F">
+        <textarea value="{{ chatInput }}" onInput="{{ setChatInput }}" onKeyDown="{{ chatKey }}" placeholder="{{ t.chat.placeholder }}" rows="1" style="flex:1;resize:none;border:none;background:none;font-size:15px;line-height:1.5;color:#16140F;padding:8px 0;max-height:120px"></textarea>
+        <button onClick="{{ sendChat }}" style="flex:none;background:#16140F;color:#fff;border:none;border-radius:12px;width:42px;height:42px;cursor:pointer;font-size:16px">↑</button>
+      </div>
+      <div style="text-align:center;margin-top:22px"><button onClick="{{ goExport }}" style="display:inline-flex;align-items:center;background:transparent;color:#16140F;border:1px solid rgba(22,20,15,.24);border-radius:999px;padding:14px 26px;font-weight:600;font-size:14px;cursor:pointer" style-hover="background:#FAF8F3">{{ t.chat.finish }} →</button></div>
+    </div>
+  </sc-if>
+
+  <!-- ============ EXPORT ============ -->
+  <sc-if value="{{ isExport }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:680px;margin:0 auto;padding:48px 24px 96px;animation:fadeUp .45s ease">
+      <div class="no-print" style="text-align:center;margin-bottom:30px">
+        <div style="font-family:'Spline Sans Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9A9384;margin-bottom:14px">{{ t.export.eyebrow }}</div>
+        <h1 style="font-family:Newsreader,'Noto Serif KR',serif;font-weight:500;font-size:36px;line-height:1.12;margin:0 0 10px">{{ t.export.title }}</h1>
+        <p style="font-size:15px;line-height:1.6;color:#6B6557;margin:0 auto;max-width:480px">{{ t.export.sub }}</p>
+      </div>
+
+      <div class="print-card" style="background:#fff;border:1px solid #EAE5D9;border-radius:22px;padding:36px;box-shadow:0 1px 2px rgba(30,26,18,.04),0 24px 60px -36px rgba(30,26,18,.4)">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px;flex-wrap:wrap">
+          <div>
+            <div style="font-family:Newsreader,'Noto Serif KR',serif;font-size:22px">{{ t.app.name }}</div>
+            <div style="font-family:'Spline Sans Mono',monospace;font-size:11px;color:#9A9384;margin-top:4px">{{ sessionMeta }}</div>
+          </div>
+          <div style="display:inline-flex;align-items:center;gap:7px;background:#16140F;color:#fff;border-radius:999px;padding:8px 14px;font-family:'Spline Sans Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase">⚑ {{ t.reflect.badge }}</div>
+        </div>
+
+        <div style="border-top:1px solid #F0ECE3;padding-top:20px">
+          <div style="font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9A9384;margin-bottom:14px">{{ t.export.processLabel }}</div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
+            <sc-for list="{{ processRows }}" as="r" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:14px">
+                <div style="width:36px;height:36px;border:1.5px solid #16140F;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:Newsreader,serif;font-size:18px;flex:none">{{ r.glyph }}</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-weight:600;font-size:15px">{{ r.name }}</div>
+                  <div style="font-family:'Spline Sans Mono',monospace;font-size:12px;color:#8A8475">{{ r.meta }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ hasReflectQuote }}" hint-placeholder-val="{{ false }}">
+            <div style="font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9A9384;margin-bottom:8px">{{ t.export.themeLabel }}</div>
+            <p style="font-family:Newsreader,'Noto Serif KR',serif;font-size:19px;line-height:1.5;font-style:italic;color:#33302A;margin:0 0 22px">“{{ reflectQuote }}”</p>
+          </sc-if>
+
+          <div style="background:#FAF8F3;border:1px solid #EFEBE2;border-radius:14px;padding:16px 18px">
+            <div style="font-weight:700;font-size:12.5px;margin-bottom:6px">⚑ {{ t.reflect.safetyTitle }}</div>
+            <p style="font-size:13px;line-height:1.6;color:#6B6557;margin:0">{{ t.export.cardSafety }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-print" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:26px;justify-content:center">
+        <button onClick="{{ printCard }}" style="display:inline-flex;align-items:center;gap:9px;background:#16140F;color:#fff;border:none;border-radius:999px;padding:15px 26px;font-weight:600;font-size:14.5px;cursor:pointer">⎙ {{ t.export.print }}</button>
+        <button onClick="{{ downloadSession }}" style="display:inline-flex;align-items:center;gap:9px;background:#fff;color:#16140F;border:1px solid rgba(22,20,15,.24);border-radius:999px;padding:15px 24px;font-weight:600;font-size:14.5px;cursor:pointer" style-hover="background:#FAF8F3">↓ {{ t.export.download }}</button>
+        <button onClick="{{ restart }}" style="display:inline-flex;align-items:center;background:none;color:#8A8475;border:none;padding:15px 16px;font-weight:600;font-size:14.5px;cursor:pointer">↻ {{ t.export.restart }}</button>
+      </div>
+      <p class="no-print" style="text-align:center;font-size:12.5px;color:#9A9384;margin-top:22px;line-height:1.6">{{ t.export.dataNote }}</p>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.canvasRef = React.createRef();
+    this.fileRef = React.createRef();
+    this.TASKS = ['house','tree','person'];
+    this.strokes = [];
+    this.events = [];
+    this.tool = 'pen';
+    this.lineWidth = 3;
+    this.drawing = false;
+    this.cur = null;
+    this.symbolStart = 0;
+    this.undoCount = 0;
+    this.eraserCount = 0;
+    this._wired = false;
+    this.state = {
+      screen:'landing', lang:'en', showAbout:false, showAISettings:false,
+      aiProvider:localStorage.getItem('htp_ai_provider')||'auto', aiKey:localStorage.getItem('htp_openai_key')||'', aiModel:localStorage.getItem('htp_openai_model')||'gpt-4.1-mini', aiEndpoint:localStorage.getItem('htp_openai_endpoint')||'https://api.openai.com/v1/chat/completions',
+      consent:{ notClinical:false, recording:false, expert:false, research:false },
+      survey:{ age:'', gender:'', mood:'', comfort:'' },
+      mode:'', taskIndex:0, subPhase:'input', phase:'input',
+      drawings:{}, selections:{}, answers:{house:{},tree:{},person:{}},
+      tool:'pen', lineWidth:3, strokeTick:0,
+      reflection:null, reflectLoading:false,
+      chat:[], chatInput:'', chatLoading:false,
+      participantId:this.uuid(), sessionId:this.uuid(), startedAt:new Date().toISOString()
+    };
+    this._down = this.onDown.bind(this);
+    this._move = this.onMove.bind(this);
+    this._up = this.onUp.bind(this);
+  }
+  uuid(){ return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return (c==='x'?r:(r&0x3|0x8)).toString(16)}); }
+
+  // ---------- canvas ----------
+  componentDidMount(){ window.addEventListener('mouseup', this._up); this.syncCanvas(); }
+  componentWillUnmount(){ window.removeEventListener('mouseup', this._up); }
+  componentDidUpdate(){ this.syncCanvas(); }
+  syncCanvas(){
+    const c = this.canvasRef.current;
+    if(!c){ this._wired=false; return; }
+    if(!this._wired){
+      const ratio = window.devicePixelRatio||1;
+      const rect = c.getBoundingClientRect();
+      c.width = Math.round((rect.width||860)*ratio);
+      c.height = Math.round(440*ratio);
+      this._ctx = c.getContext('2d');
+      this._ctx.scale(ratio,ratio);
+      this._cssW = rect.width||860; this._cssH = 440; this._ratio = ratio;
+      c.addEventListener('mousedown', this._down);
+      c.addEventListener('mousemove', this._move);
+      this._wired = true;
+      this.redraw();
+    }
+  }
+  pos(e){
+    const c=this.canvasRef.current; const r=c.getBoundingClientRect();
+    return { x:(e.clientX-r.left)*(this._cssW/r.width), y:(e.clientY-r.top)*(this._cssH/r.height) };
+  }
+  onDown(e){
+    if(!this.canvasRef.current) return;
+    this.drawing=true;
+    if(!this.symbolStart) this.symbolStart=performance.now();
+    const p=this.pos(e); this._t0=performance.now();
+    this.cur={ stroke_id:this.uuid(), tool:this.tool, line_width:this.lineWidth, started_at:new Date().toISOString(), points:[{x:Math.round(p.x),y:Math.round(p.y),t:0}] };
+    this._last=p;
+  }
+  onMove(e){
+    if(!this.drawing||!this.cur) return;
+    const p=this.pos(e);
+    this.cur.points.push({x:Math.round(p.x),y:Math.round(p.y),t:Math.round(performance.now()-this._t0)});
+    const ctx=this._ctx;
+    ctx.lineCap='round'; ctx.lineJoin='round';
+    if(this.tool==='eraser'){ ctx.globalCompositeOperation='destination-out'; ctx.lineWidth=this.lineWidth*6; }
+    else { ctx.globalCompositeOperation='source-over'; ctx.strokeStyle='#16140F'; ctx.lineWidth=this.lineWidth; }
+    ctx.beginPath(); ctx.moveTo(this._last.x,this._last.y); ctx.lineTo(p.x,p.y); ctx.stroke();
+    this._last=p;
+  }
+  onUp(){
+    if(!this.drawing) return;
+    this.drawing=false;
+    if(this.cur && this.cur.points.length){
+      this.cur.ended_at=new Date().toISOString();
+      if(this.cur.tool==='eraser') this.eraserCount++;
+      this.strokes.push(this.cur);
+      this.setState(s=>({strokeTick:s.strokeTick+1}));
+    }
+    this.cur=null;
+  }
+  redraw(){
+    const ctx=this._ctx; if(!ctx) return;
+    ctx.clearRect(0,0,this._cssW,this._cssH);
+    ctx.lineCap='round'; ctx.lineJoin='round';
+    for(const st of this.strokes){
+      if(st.tool==='eraser'){ ctx.globalCompositeOperation='destination-out'; ctx.lineWidth=st.line_width*6; }
+      else { ctx.globalCompositeOperation='source-over'; ctx.strokeStyle='#16140F'; ctx.lineWidth=st.line_width; }
+      ctx.beginPath();
+      st.points.forEach((p,i)=> i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+      ctx.stroke();
+    }
+    ctx.globalCompositeOperation='source-over';
+  }
+  setPen(){ this.tool='pen'; this.setState({tool:'pen'}); }
+  setEraser(){ this.tool='eraser'; this.setState({tool:'eraser'}); }
+  setWidth(w){ this.lineWidth=w; this.setState({lineWidth:w}); }
+  undo(){ if(this.drawing||!this.strokes.length) return; this.strokes.pop(); this.undoCount++; this.events.push({type:'undo',timestamp:new Date().toISOString()}); this.redraw(); this.setState(s=>({strokeTick:s.strokeTick+1})); }
+  clearCanvas(){ if(!this.strokes.length) return; this.strokes=[]; this.events.push({type:'clear',timestamp:new Date().toISOString()}); this.redraw(); this.setState(s=>({strokeTick:s.strokeTick+1})); }
+  resetCanvasData(){ this.strokes=[]; this.events=[]; this.undoCount=0; this.eraserCount=0; this.symbolStart=0; this.cur=null; this.drawing=false; }
+
+  features(sym, idx){
+    const pts=[]; let len=0;
+    for(const st of this.strokes){ if(st.tool!=='pen') continue; let prev=null; for(const p of st.points){ pts.push(p); if(prev) len+=Math.hypot(p.x-prev.x,p.y-prev.y); prev=p; } }
+    if(!pts.length) return { summary:`(${sym}) left mostly blank — ${this.strokes.length} marks, ${this.undoCount} undo, ${this.eraserCount} eraser`, blank:true };
+    const xs=pts.map(p=>p.x), ys=pts.map(p=>p.y);
+    const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
+    const W=this._cssW||860, H=this._cssH||440;
+    const bw=(maxX-minX)/W, bh=(maxY-minY)/H;
+    const sizeR=Math.max(bw,bh);
+    const cx=(minX+maxX)/2/W, cy=(minY+maxY)/2/H;
+    const size= sizeR>0.7?'large':sizeR>0.42?'medium':'small';
+    const hPos= cx<0.38?'left':cx>0.62?'right':'centered';
+    const vPos= cy<0.4?'upper':cy>0.6?'lower':'middle';
+    const dur=Math.round((performance.now()-this.symbolStart)/1000);
+    return { summary:`${this.strokes.length} strokes drawn over ${dur}s; the form is ${size} (occupies ~${Math.round(sizeR*100)}% of the canvas), positioned ${vPos}-${hPos}; ${this.undoCount} undo, ${this.eraserCount} eraser actions; drawn as symbol ${idx+1} of 3`, blank:false, dur, size, pos:`${vPos}-${hPos}` };
+  }
+  pngWhiteBg(){
+    const c=this.canvasRef.current; if(!c) return null;
+    const t=document.createElement('canvas'); t.width=c.width; t.height=c.height;
+    const tc=t.getContext('2d'); tc.fillStyle='#fff'; tc.fillRect(0,0,t.width,t.height); tc.drawImage(c,0,0);
+    return t.toDataURL('image/png');
+  }
+
+  // ---------- nav / lang ----------
+  get t(){ return DICT[this.state.lang]; }
+  setEn(){ this.setState({lang:'en'}); }
+  setKo(){ this.setState({lang:'ko'}); }
+  openAbout(){ this.setState({showAbout:true}); }
+  closeAbout(){ this.setState({showAbout:false}); }
+  openAISettings(){ this.setState({showAISettings:true}); }
+  closeAISettings(){ this.setState({showAISettings:false}); }
+  setAIProvider(e){ this.setState({aiProvider:e.target.value}); }
+  setAIModel(e){ this.setState({aiModel:e.target.value}); }
+  setAIEndpoint(e){ this.setState({aiEndpoint:e.target.value}); }
+  setAIKey(e){ this.setState({aiKey:e.target.value}); }
+  saveAISettings(){ try{ localStorage.setItem('htp_ai_provider',this.state.aiProvider); localStorage.setItem('htp_openai_key',this.state.aiKey); localStorage.setItem('htp_openai_model',this.state.aiModel); localStorage.setItem('htp_openai_endpoint',this.state.aiEndpoint); }catch(e){} this.setState({showAISettings:false}); }
+  clearAISettings(){ try{ ['htp_ai_provider','htp_openai_key','htp_openai_model','htp_openai_endpoint'].forEach(k=>localStorage.removeItem(k)); }catch(e){} this.setState({aiProvider:'auto',aiKey:'',aiModel:'gpt-4.1-mini',aiEndpoint:'https://api.openai.com/v1/chat/completions'}); }
+  stop(e){ e.stopPropagation(); }
+  start(){ this.setState({screen:'consent'}); }
+  back(){ const order=['landing','consent','survey','mode']; const i=order.indexOf(this.state.screen); if(i>0) this.setState({screen:order[i-1]}); }
+  toggleConsent(k){ this.setState(s=>({consent:{...s.consent,[k]:!s.consent[k]}})); }
+  consentContinue(){ const c=this.state.consent; if(c.notClinical&&c.recording&&c.expert) this.setState({screen:'survey'}); }
+  setSurvey(k,v){ this.setState(s=>({survey:{...s.survey,[k]:v}})); }
+  surveyContinue(){ this.setState({screen:'mode'}); }
+  pickMode(m){ this.resetCanvasData(); this.setState({mode:m, screen:'task', taskIndex:0, phase:'input', subPhase: m==='image'?'image':'draw'}); }
+
+  // ---------- task flow ----------
+  curSym(){ return this.TASKS[this.state.taskIndex]; }
+  saveDrawing(){
+    const sym=this.curSym(); const idx=this.state.taskIndex;
+    const f=this.features(sym, idx);
+    const c=this.canvasRef.current;
+    const d={ drawing_id:this.uuid(), drawing_type:sym, canvas:{width:c?c.width:0,height:c?c.height:0,devicePixelRatio:this._ratio}, strokes:this.strokes.slice(), events:this.events.slice(), undo_count:this.undoCount, eraser_count:this.eraserCount, duration_seconds:f.dur||0, png:this.pngWhiteBg(), summary:f.summary, blank:f.blank, created_at:new Date().toISOString() };
+    this.setState(s=>({drawings:{...s.drawings,[sym]:d}}));
+  }
+  drawNext(){
+    this.saveDrawing();
+    if(this.state.mode==='hybrid'){ this.resetCanvasData(); this.setState({subPhase:'image'}); }
+    else { this.setState({phase:'followup'}); }
+  }
+  selectCurated(tile){
+    const sym=this.curSym();
+    this.setState(s=>({selections:{...s.selections,[sym]:{ selection_id:this.uuid(), category:sym, source:'curated', label:tile.label, tags:[tile.key], selection_type:'primary', selected_at:new Date().toISOString() }}}));
+  }
+  clearSelection(){ const sym=this.curSym(); this.setState(s=>{const n={...s.selections}; delete n[sym]; return {selections:n};}); }
+  triggerUpload(){ if(this.fileRef.current) this.fileRef.current.click(); }
+  onUpload(e){
+    const file=e.target.files&&e.target.files[0]; if(!file) return;
+    const sym=this.curSym(); const reader=new FileReader();
+    reader.onload=ev=>{ this.setState(s=>({selections:{...s.selections,[sym]:{ selection_id:this.uuid(), category:sym, source:'upload', label:file.name, fileName:file.name, image_url:ev.target.result, tags:[], selection_type:'primary', selected_at:new Date().toISOString() }}})); };
+    reader.readAsDataURL(file);
+    e.target.value='';
+  }
+  openUnsplash(){ window.open('https://unsplash.com/s/photos/'+this.curSym(),'_blank'); }
+  openGoogle(){ window.open('https://www.google.com/search?tbm=isch&q='+this.curSym(),'_blank'); }
+  imageNext(){ if(!this.state.selections[this.curSym()]) return; this.setState({phase:'followup'}); }
+  setAnswer(sym,key,val){ this.setState(s=>({answers:{...s.answers,[sym]:{...s.answers[sym],[key]:val}}})); }
+  followupContinue(){
+    if(this.state.taskIndex<2){
+      this.resetCanvasData();
+      this.setState(s=>({taskIndex:s.taskIndex+1, phase:'input', subPhase: s.mode==='image'?'image':'draw'}));
+    } else {
+      this.setState({screen:'reflect'}); this.buildReflection();
+    }
+  }
+
+  // ---------- AI ----------
+  contextDump(){
+    let ctx='';
+    for(const sym of this.TASKS){
+      ctx+=`\n## ${sym.toUpperCase()}\n`;
+      const d=this.state.drawings[sym]; if(d) ctx+=`Drawing process (no image seen, only behavioural data): ${d.summary}.\n`;
+      const sel=this.state.selections[sym]; if(sel) ctx+=`Chosen image: source=${sel.source}, label="${sel.label}", qualities=[${(sel.tags||[]).join(', ')}].\n`;
+      const a=this.state.answers[sym]||{};
+      const ans=Object.entries(a).filter(([k,v])=>v&&v.trim()).map(([k,v])=>`  - ${k}: ${v}`).join('\n');
+      ctx+=`User's own words:\n${ans||'  (left blank)'}\n`;
+    }
+    return ctx;
+  }
+  imageInputs(){
+    const items=[];
+    for(const sym of this.TASKS){
+      const d=this.state.drawings[sym];
+      if(d&&d.png) items.push({label:`${sym} drawing`, url:d.png});
+      const sel=this.state.selections[sym];
+      if(sel&&sel.image_url&&String(sel.image_url).startsWith('data:image/')) items.push({label:`${sym} uploaded image`, url:sel.image_url});
+    }
+    return items.slice(0,6);
+  }
+  async callAI(prompt, opts={}){
+    const provider=this.state.aiProvider||'auto';
+    const allowOpenAI=provider==='auto'||provider==='openai';
+    const allowClaude=provider==='auto'||provider==='claude';
+    const allowFallback=provider==='fallback';
+    if(!allowFallback){
+      try{ if(allowOpenAI&&window.gpt&&window.gpt.complete) return await window.gpt.complete(prompt); }catch(e){}
+      try{ if(allowOpenAI&&window.openai&&window.openai.complete) return await window.openai.complete(prompt); }catch(e){}
+      try{ if(allowOpenAI&&window.openaiComplete) return await window.openaiComplete(prompt); }catch(e){}
+      try{
+        if(allowOpenAI&&this.state.aiKey&&this.state.aiEndpoint){
+          const content=[{type:'text', text:prompt}];
+          if(opts.includeImages){
+            for(const img of this.imageInputs()) content.push({type:'image_url', image_url:{url:img.url, detail:'low'}});
+          }
+          const res=await fetch(this.state.aiEndpoint,{ method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+this.state.aiKey}, body:JSON.stringify({ model:this.state.aiModel||'gpt-4.1-mini', messages:[{role:'user', content}], temperature:0.35 }) });
+          if(!res.ok) throw new Error('OpenAI request failed: '+res.status);
+          const json=await res.json();
+          return (((json.choices||[])[0]||{}).message||{}).content || '';
+        }
+      }catch(e){ console.warn('GPT/OpenAI call failed', e); }
+      try{ if(allowClaude&&window.claude&&window.claude.complete) return await window.claude.complete(prompt); }catch(e){}
+    }
+    return '';
+  }
+  async buildReflection(){
+    this.setState({reflectLoading:true});
+    const lang=this.state.lang;
+    const sys=`You are a careful visual-observation assistant for an HTP-inspired (House-Tree-Person) self-reflection tool. You are NOT a clinician. You must NEVER diagnose, never infer trauma/illness/disorder/personality, never say "you are" or "this means you have". Use only cautious, reflective language ("this may invite the question", "one possible reflection"). The user's own words matter more than the image. Final interpretation is reserved for a qualified human expert. Respond in ${lang==='ko'?'Korean':'English'}.`;
+    const prompt=`${sys}\n\nSESSION DATA:\n${this.contextDump()}\n\nReturn ONLY valid minified JSON (no markdown), with this shape:\n{"observations":{"house":"1 neutral sentence describing only the behavioural/visual data","tree":"...","person":"..."},"userWords":"2-3 sentences summarising the user's own explanations across the three symbols, treating them as primary","symbolic":["2-3 cautious HTP-inspired reflective prompts, each phrased as an open question, no conclusions"],"expertQuestions":["3 questions a human expert or the user could explore later"],"action":"one gentle, practical, non-clinical action the user might try today","preliminary":"a 2-3 sentence structured note explicitly framed as preliminary AI material for expert review, not a final interpretation"}`;
+    let data=null;
+    try{
+      let raw=await this.callAI(prompt,{includeImages:true});
+      raw=String(raw||'').replace(/```json/gi,'').replace(/```/g,'').trim();
+      const a=raw.indexOf('{'), b=raw.lastIndexOf('}');
+      if(a>=0&&b>=0) data=JSON.parse(raw.slice(a,b+1));
+    }catch(err){ data=null; }
+    if(!data) data=this.fallbackReflection();
+    this.setState({reflection:data, reflectLoading:false});
+  }
+  fallbackReflection(){
+    const ko=this.state.lang==='ko';
+    if(ko) return { observations:{house:'사용자가 그리거나 선택한 집에 대한 관찰 내용입니다.',tree:'나무에 대한 관찰 내용입니다.',person:'사람에 대한 관찰 내용입니다.'}, userWords:'사용자가 직접 남긴 설명이 이 성찰의 중심입니다.', symbolic:['이 집이 당신에게 어떤 안전을 의미할 수 있을까요?','이 나무는 무엇을 향해 자라고 있나요?'], expertQuestions:['이 이미지가 왜 의미 있게 느껴졌나요?','무엇이 달라지면 더 편안해질까요?'], action:'오늘, 당신의 공간을 조금 더 당신답게 만드는 작은 일을 해보세요.', preliminary:'전문가 검토를 위한 예비 AI 메모입니다. 최종 해석이 아닙니다.' };
+    return { observations:{house:'A house was drawn or chosen; the recorded data describes its size, placement and the process behind it.',tree:'A tree was drawn or chosen, with its own form and process captured.',person:'A whole person was drawn or chosen as the third symbol.'}, userWords:'Your own explanations are the centre of this reflection and carry more weight than the images alone.', symbolic:['What kind of safety might this house represent for you?','Toward what is this tree growing, and what grounds it?','What does this person seem to need right now?'], expertQuestions:['What made these images or drawings feel meaningful to you?','Does this house feel like a place to enter, leave, protect, or observe from outside?','What would change if things felt a little safer?'], action:'Today, you might choose one small way to make your space feel calmer or more yours.', preliminary:'Preliminary AI-generated summary for expert review. This organizes observations and the user\u2019s words; it is not a final interpretation.' };
+  }
+  goChat(){ if(!this.state.chat.length){ this.setState({screen:'chat', chat:[{role:'assistant',content:this.t.chat.greeting}]}); } else { this.setState({screen:'chat'}); } }
+  goExport(){ this.setState({screen:'export'}); }
+  setChatInput(e){ this.setState({chatInput:e.target.value}); }
+  chatKey(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); this.sendChat(); } }
+  quickReply(text){ this.sendChatText(text); }
+  sendChat(){ const v=this.state.chatInput.trim(); if(v) this.sendChatText(v); }
+  async sendChatText(text){
+    if(this.state.chatLoading) return;
+    const msgs=[...this.state.chat,{role:'user',content:text}];
+    this.setState({chat:msgs, chatInput:'', chatLoading:true});
+    const lang=this.state.lang;
+    const sys=`You are a warm, intelligent reflection companion in an HTP-inspired self-reflection tool. RULES: never diagnose; never say "this means you are"; never infer trauma, illness, disorder, pathology, family dysfunction or personality traits as fact; avoid clinical labels. Prioritise the user's own description. If asked what a drawing "means", say you can notice features, summarise their words and suggest reflection questions, but you cannot give a final psychological interpretation — a qualified expert should review it in context. Keep replies to 2-4 short sentences, warm and curious. Respond in ${lang==='ko'?'Korean':'English'}.`;
+    const transcript=msgs.map(m=>`${m.role==='user'?'User':'Assistant'}: ${m.content}`).join('\n');
+    const prompt=`${sys}\n\nSESSION CONTEXT:\n${this.contextDump()}\n\nCONVERSATION:\n${transcript}\n\nAssistant:`;
+    let reply='';
+    try{
+      reply=String(await this.callAI(prompt,{includeImages:false})||'').trim();
+    }catch(err){ reply=''; }
+    if(!reply) reply=this.t.chat.fallback;
+    this.setState(s=>({chat:[...s.chat,{role:'assistant',content:reply}], chatLoading:false}));
+  }
+
+  // ---------- export ----------
+  downloadSession(){
+    const s=this.state;
+    const payload={ participant:{participant_id:s.participantId, created_at:s.startedAt, language:s.lang, ...s.survey, consent:s.consent}, session:{session_id:s.sessionId, mode:s.mode, started_at:s.startedAt, completed_at:new Date().toISOString(), locale:s.lang}, drawings:Object.values(s.drawings).map(d=>({...d})), image_selections:Object.values(s.selections), followup_answers:s.answers, ai_reflection:s.reflection, chat_messages:s.chat };
+    const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob); const a=document.createElement('a');
+    a.href=url; a.download=`reflection-session-${s.sessionId.slice(0,8)}.json`; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+  }
+  printCard(){ window.print(); }
+  restart(){ this.resetCanvasData(); this.setState({ screen:'landing', consent:{notClinical:false,recording:false,expert:false,research:false}, survey:{age:'',gender:'',mood:'',comfort:''}, mode:'', taskIndex:0, phase:'input', subPhase:'input', drawings:{}, selections:{}, answers:{house:{},tree:{},person:{}}, reflection:null, chat:[], chatInput:'', participantId:this.uuid(), sessionId:this.uuid(), startedAt:new Date().toISOString() }); }
+
+  // ---------- render helpers ----------
+  chipStyle(sel){ return `padding:10px 16px;border-radius:999px;border:1px solid ${sel?'#16140F':'#EAE5D9'};background:${sel?'#16140F':'#fff'};color:${sel?'#fff':'#3E3A31'};font-weight:600;font-size:14px;cursor:pointer;transition:all .15s`; }
+  toolStyle(active){ return `display:inline-flex;align-items:center;gap:6px;padding:9px 15px;border-radius:10px;border:1px solid ${active?'#16140F':'#EAE5D9'};background:${active?'#16140F':'#fff'};color:${active?'#fff':'#3E3A31'};font-weight:600;font-size:13px;cursor:pointer`; }
+
+  aiProviderStatus(){
+    if(this.state.aiProvider==='fallback') return this.t.ai.statusFallback;
+    if(this.state.aiProvider==='claude') return (window.claude&&window.claude.complete)?this.t.ai.statusClaude:this.t.ai.statusMissing;
+    if(this.state.aiKey) return this.t.ai.statusGPT;
+    if(window.gpt||window.openai||window.openaiComplete) return this.t.ai.statusBridge;
+    if(window.claude&&window.claude.complete) return this.t.ai.statusClaude;
+    return this.t.ai.statusFallback;
+  }
+
+  renderVals(){
+    const s=this.state; const t=this.t; const sc=s.screen;
+    const v={ t, showAbout:s.showAbout,
+      isLanding:sc==='landing', isConsent:sc==='consent', isSurvey:sc==='survey', isMode:sc==='mode', isTask:sc==='task', isReflect:sc==='reflect', isChat:sc==='chat', isExport:sc==='export',
+      setEn:()=>this.setEn(), setKo:()=>this.setKo(), openAbout:()=>this.openAbout(), closeAbout:()=>this.closeAbout(), openAISettings:()=>this.openAISettings(), closeAISettings:()=>this.closeAISettings(), stop:(e)=>this.stop(e),
+      start:()=>this.start(), back:()=>this.back(),
+      enStyle:`padding:7px 13px;border:none;background:${s.lang==='en'?'#16140F':'#fff'};color:${s.lang==='en'?'#fff':'#6B6557'};font-weight:600;font-size:12.5px;cursor:pointer`,
+      koStyle:`padding:7px 13px;border:none;background:${s.lang==='ko'?'#16140F':'#fff'};color:${s.lang==='ko'?'#fff':'#6B6557'};font-weight:600;font-size:12.5px;cursor:pointer`,
+      aiStatusLabel:(s.aiProvider==='openai'||(s.aiProvider==='auto'&&s.aiKey))?'GPT':'AI', aiProviderStatus:this.aiProviderStatus(),
+      showAISettings:s.showAISettings, aiProvider:s.aiProvider, aiKey:s.aiKey, aiModel:s.aiModel, aiEndpoint:s.aiEndpoint,
+      setAIProvider:(e)=>this.setAIProvider(e), setAIKey:(e)=>this.setAIKey(e), setAIModel:(e)=>this.setAIModel(e), setAIEndpoint:(e)=>this.setAIEndpoint(e), saveAISettings:()=>this.saveAISettings(), clearAISettings:()=>this.clearAISettings(),
+    };
+    // progress
+    const map={landing:6,consent:16,survey:28,mode:40,reflect:90,chat:96,export:100};
+    let pct=map[sc]!=null?map[sc]:50;
+    if(sc==='task'){ const per=(80-44)/3; pct=44+s.taskIndex*per+(s.phase==='followup'?per*0.6:per*0.2); }
+    v.progressPct=Math.round(pct)+'%';
+
+    v.landingSteps=[ {glyph:'✎',title:t.landing.s1t,desc:t.landing.s1d}, {glyph:'❖',title:t.landing.s2t,desc:t.landing.s2d}, {glyph:'❝',title:t.landing.s3t,desc:t.landing.s3d} ];
+
+    // consent
+    const cdefs=[['notClinical',t.consent.i1],['recording',t.consent.i2],['expert',t.consent.i3],['research',t.consent.i4]];
+    v.consentItems=cdefs.map(([k,label])=>{ const on=s.consent[k]; return { label, toggle:()=>this.toggleConsent(k), check:on?'✓':'', style:`display:flex;align-items:flex-start;gap:13px;text-align:left;background:${on?'#FAF8F3':'#fff'};border:1px solid ${on?'#16140F':'#EAE5D9'};border-radius:14px;padding:16px 18px;cursor:pointer;transition:all .15s`, box:`flex:none;width:24px;height:24px;border-radius:7px;border:1.5px solid ${on?'#16140F':'#CFC8B8'};background:${on?'#16140F':'#fff'};color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;margin-top:1px` }; });
+    const cok=s.consent.notClinical&&s.consent.recording&&s.consent.expert;
+    v.consentContinue=()=>this.consentContinue();
+    v.consentBtnStyle=`display:inline-flex;align-items:center;gap:10px;background:${cok?'#16140F':'#D9D3C6'};color:#fff;border:none;border-radius:999px;padding:16px 30px;font-weight:600;font-size:15px;cursor:${cok?'pointer':'not-allowed'}`;
+
+    // survey
+    const sg=[ ['age',t.survey.qAge,['18–24','25–34','35–44','45–54','55–64','65+',t.survey.na]], ['gender',t.survey.qGender,[t.survey.female,t.survey.male,t.survey.nonbinary,t.survey.na,t.survey.selfdesc]], ['mood',t.survey.qMood,[t.survey.calm,t.survey.tired,t.survey.curious,t.survey.anxious,t.survey.hopeful,t.survey.other]], ['comfort',t.survey.qComfort,[t.survey.comfortable,t.survey.neutral,t.survey.notconf]] ];
+    v.surveyGroups=sg.map(([k,label,opts])=>({ label, options:opts.map(o=>({label:o, onClick:()=>this.setSurvey(k,o), style:this.chipStyle(s.survey[k]===o)})) }));
+    v.surveyContinue=()=>this.surveyContinue();
+    v.surveyBtnStyle=`display:inline-flex;align-items:center;gap:10px;background:#16140F;color:#fff;border:none;border-radius:999px;padding:16px 30px;font-weight:600;font-size:15px;cursor:pointer`;
+
+    // mode
+    const mc=[['draw','✎',t.mode.drawT,t.mode.drawD,t.mode.drawB],['image','❖',t.mode.imgT,t.mode.imgD,t.mode.imgB],['hybrid','◫',t.mode.hybT,t.mode.hybD,t.mode.hybB]];
+    v.modeCards=mc.map(([m,glyph,title,desc,best])=>({glyph,title,desc,best,onClick:()=>this.pickMode(m)}));
+
+    // task common
+    const sym=this.curSym(); const idx=s.taskIndex;
+    v.symbolDots=this.TASKS.map((sy,i)=>{ const active=i===idx; const done=i<idx; const glyphs={house:'⌂',tree:'↑',person:'☖'}; return { glyph:glyphs[sy], name:t.sym[sy], sep:i<2, dot:`flex:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Newsreader,serif;font-size:17px;border:1.5px solid ${active||done?'#16140F':'#E4DFD2'};background:${done?'#16140F':'#fff'};color:${done?'#fff':active?'#16140F':'#C7C0B0'}`, lbl:`font-weight:600;font-size:13.5px;color:${active?'#16140F':done?'#6B6557':'#C7C0B0'}` }; });
+    const stepLabelMap={house:t.task.step1,tree:t.task.step2,person:t.task.step3};
+    v.stepLabel=stepLabelMap[sym];
+    const isDraw = s.phase==='input' && (s.mode==='draw' || (s.mode==='hybrid'&&s.subPhase==='draw'));
+    const isImage = s.phase==='input' && (s.mode==='image' || (s.mode==='hybrid'&&s.subPhase==='image'));
+    v.showDraw=isDraw; v.showImage=isImage; v.showFollowup=s.phase==='followup';
+
+    // draw
+    v.canvasRef=this.canvasRef;
+    v.setPen=()=>this.setPen(); v.setEraser=()=>this.setEraser(); v.undo=()=>this.undo(); v.clearCanvas=()=>this.clearCanvas();
+    v.penStyle=this.toolStyle(s.tool==='pen'); v.eraserStyle=this.toolStyle(s.tool==='eraser');
+    v.widthOptions=[['S',2,3],['M',3,5],['L',5,8]].map(([label,w,d])=>({label, onClick:()=>this.setWidth(w), style:`width:34px;height:34px;border-radius:9px;border:1px solid ${s.lineWidth===w?'#16140F':'#EAE5D9'};background:${s.lineWidth===w?'#FAF8F3':'#fff'};cursor:pointer;display:flex;align-items:center;justify-content:center`, dot:`width:${d}px;height:${d}px;border-radius:50%;background:#16140F;display:block`}));
+    v.strokeCount=this.strokes.length;
+    const drawPromptMap={house:t.task.drawHouse,tree:t.task.drawTree,person:t.task.drawPerson};
+    v.drawPrompt=drawPromptMap[sym];
+    v.drawNext=()=>this.drawNext();
+    v.drawNextLabel = s.mode==='hybrid'?t.task.toImage:t.common.continue;
+    v.drawNextStyle=`display:inline-flex;align-items:center;gap:10px;background:#16140F;color:#fff;border:none;border-radius:999px;padding:16px 30px;font-weight:600;font-size:15px;cursor:pointer`;
+
+    // image
+    const imgPromptMap={house:t.image.house,tree:t.image.tree,person:t.image.person};
+    v.imagePrompt=imgPromptMap[sym];
+    const sel=s.selections[sym];
+    v.hasSelection=!!sel;
+    if(sel){ v.selLabel=sel.label; v.selSource = sel.source==='upload'?t.image.srcUpload:(sel.source==='unsplash'?'Unsplash':t.image.srcCurated); v.selThumbGlyph = sel.image_url?'':({house:'⌂',tree:'↑',person:'☖'}[sym]); v.selThumbStyle = sel.image_url?`flex:none;width:64px;height:64px;border-radius:12px;background:#000 center/cover url(${sel.image_url})`:`flex:none;width:64px;height:64px;border-radius:12px;background:#F6F4EF;border:1px solid #EAE5D9;display:flex;align-items:center;justify-content:center;font-family:Newsreader,serif;font-size:26px;color:#16140F`; }
+    v.clearSelection=()=>this.clearSelection();
+    v.triggerUpload=()=>this.triggerUpload(); v.onUpload=(e)=>this.onUpload(e); v.fileRef=this.fileRef;
+    v.openUnsplash=()=>this.openUnsplash(); v.openGoogle=()=>this.openGoogle();
+    const CUR={ house:['warm home','isolated house','modern house','old house','open windows','closed house','house in nature','bright house'], tree:['rooted tree','bare tree','flowering tree','tall tree','solitary tree','forest tree','tree near water','fruit tree'], person:['person alone','in a crowd','walking','resting','from behind','facing camera','contemplative','in nature'] };
+    v.curatedTiles=(CUR[sym]||[]).map((key,i)=>{ const selected = sel&&sel.source==='curated'&&sel.tags[0]===key; const hue=(i*41)%360; return { key, label:key, selected, onClick:()=>this.selectCurated({key,label:key}), style:`position:relative;display:flex;flex-direction:column;background:#fff;border:1.5px solid ${selected?'#16140F':'#EAE5D9'};border-radius:14px;overflow:hidden;cursor:pointer;padding:0;transition:border-color .15s`, swatch:`height:78px;background:repeating-linear-gradient(135deg, #F2EFE8 0 8px, #ECE8DF 8px 16px)` }; });
+    v.imageNext=()=>this.imageNext();
+    v.imageNextLabel = s.mode==='hybrid'?t.common.continue:t.common.continue;
+    v.imageNextStyle=`display:inline-flex;align-items:center;gap:10px;background:${sel?'#16140F':'#D9D3C6'};color:#fff;border:none;border-radius:999px;padding:16px 30px;font-weight:600;font-size:15px;cursor:${sel?'pointer':'not-allowed'}`;
+
+    // followup
+    const QS={ house:[['whoLives',t.fq.house1],['atmosphere',t.fq.house2],['needs',t.fq.house3],['why',t.fq.house4]], tree:[['type',t.fq.tree1],['feeling',t.fq.tree2],['needs',t.fq.tree3],['why',t.fq.tree4]], person:[['who',t.fq.person1],['feeling',t.fq.person2],['needs',t.fq.person3],['why',t.fq.person4]] };
+    let qlist=(QS[sym]||[]).slice();
+    if(s.mode==='hybrid'){ qlist=qlist.concat([['similar',t.fq.hyb1],['different',t.fq.hyb2],['closer',t.fq.hyb3]]); }
+    v.followQuestions=qlist.map(([key,label])=>({ key, label, value:(s.answers[sym]||{})[key]||'', onInput:(e)=>this.setAnswer(sym,key,e.target.value) }));
+    v.followupContinue=()=>this.followupContinue();
+    v.followupNextLabel = idx<2?t.common.next:t.followup.toReflect;
+
+    // reflect
+    v.reflectLoading=s.reflectLoading; v.reflectReady=!s.reflectLoading&&!!s.reflection;
+    if(s.reflection){ const r=s.reflection; const symNames=t.sym;
+      v.reflectSections=[
+        {num:'01',title:t.reflect.s1, boxStyle:'background:#fff;border:1px solid #EFEBE2;border-radius:14px;padding:18px 20px', blocks:this.TASKS.filter(sy=>r.observations&&r.observations[sy]).map(sy=>({hasHead:true,head:symNames[sy],text:r.observations[sy]}))},
+        {num:'02',title:t.reflect.s2, boxStyle:'', blocks:[{hasHead:false,text:r.userWords||''}]},
+        {num:'03',title:t.reflect.s3, boxStyle:'', blocks:(r.symbolic||[]).map(x=>({hasHead:false,text:'— '+x}))},
+        {num:'04',title:t.reflect.s4, boxStyle:'', blocks:(r.expertQuestions||[]).map(x=>({hasHead:false,text:'— '+x}))},
+        {num:'05',title:t.reflect.s5, boxStyle:'background:#FAF8F3;border:1.5px solid #16140F;border-radius:14px;padding:20px 22px', blocks:[{hasHead:true,head:t.reflect.prelimTag,text:r.preliminary||''}]},
+        {num:'06',title:t.reflect.s6, boxStyle:'background:#FAF8F3;border:1px solid #EFEBE2;border-radius:14px;padding:18px 20px', blocks:[{hasHead:false,text:r.action||''}]},
+      ];
+      // make section 05 text white
+    }
+    v.goChat=()=>this.goChat(); v.goExport=()=>this.goExport();
+
+    // chat
+    v.chatMessages=s.chat.map(m=>{ const u=m.role==='user'; return { content:m.content, row:`display:flex;justify-content:${u?'flex-end':'flex-start'}`, bubble:`max-width:78%;border-radius:16px;padding:13px 17px;font-size:15px;line-height:1.55;${u?'background:#16140F;color:#fff;border-bottom-right-radius:5px':'background:#F6F4EF;color:#33302A;border-bottom-left-radius:5px'}` }; });
+    v.chatLoading=s.chatLoading; v.chatInput=s.chatInput;
+    v.setChatInput=(e)=>this.setChatInput(e); v.chatKey=(e)=>this.chatKey(e); v.sendChat=()=>this.sendChat();
+    v.quickReplies=t.chat.quick.map(q=>({label:q, onClick:()=>this.quickReply(q)}));
+
+    // export
+    v.sessionMeta=`${t.export.id} ${s.participantId.slice(0,8)} · ${t.modeName[s.mode]||''} · ${new Date(s.startedAt).toLocaleDateString()}`;
+    const glyphs={house:'⌂',tree:'↑',person:'☖'};
+    v.processRows=this.TASKS.map(sy=>{ const d=s.drawings[sy]; const sel2=s.selections[sy]; let meta=''; if(d) meta=`${d.strokes?d.strokes.length:0} strokes · ${d.duration_seconds}s · ${d.undo_count} undo`; if(sel2) meta=(meta?meta+' · ':'')+`${sel2.source}: ${sel2.label}`; if(!meta) meta='—'; return {glyph:glyphs[sy], name:t.sym[sy], meta}; });
+    const rq = s.reflection && (s.reflection.symbolic&&s.reflection.symbolic[0]);
+    v.hasReflectQuote=!!rq; v.reflectQuote=rq||'';
+    v.printCard=()=>this.printCard(); v.downloadSession=()=>this.downloadSession(); v.restart=()=>this.restart();
+    return v;
+  }
+}
+
+const EN={
+  app:{ name:'House · Tree · Person Reflection Test' },
+  common:{ continue:'Continue', back:'Back', next:'Next symbol' },
+  sym:{ house:'House', tree:'Tree', person:'Person' },
+  modeName:{ draw:'Draw mode', image:'Image-choice mode', hybrid:'Hybrid mode' },
+  header:{ rec:'Recording', recHint:'Your whole session — drawings, choices, timing, answers and chat — is being recorded for later expert review.', about:'About this experience', aiSettings:'AI / GPT settings' },
+  ai:{ eyebrow:'AI connection', title:'Use GPT / OpenAI instead of Claude', body:'This prototype can use a GPT/OpenAI bridge if your environment provides one, or a temporary OpenAI-compatible API key for local testing. If no live model is available, the app safely falls back to canned reflection text.', status:'Current connection', provider:'Provider', model:'Model', endpoint:'Endpoint', key:'OpenAI-compatible API key', note:'For production, do not expose API keys in the browser. Use a small backend proxy. This local setting is only for private prototyping.', privacy:'The AI is only an observation and reflection assistant. Final interpretation still requires expert review.', save:'Save settings', clear:'Clear', close:'Close', statusGPT:'GPT/OpenAI key ready', statusBridge:'GPT/OpenAI bridge detected', statusClaude:'Claude helper detected', statusMissing:'Selected helper is missing', statusFallback:'Fallback mode' },
+  about:{ eyebrow:'About this experience', title:'A symbolic self-reflection experience', p1:'This is a self-reflection experience inspired by the House-Tree-Person task. You draw or choose a house, a tree, and a person, then reflect on them in your own words while a chatbot asks gentle questions.', p2:'It is inspired by the practice of making vision or dream boards — choosing images that feel meaningful — rather than by clinical testing.', expertTitle:'AI does not make the final interpretation', expertBody:'The AI organizes observations, summarizes your words and suggests questions. Any meaningful interpretation requires review by a qualified expert in context.', privacy:'No real name is collected. Your session is stored anonymously under a random ID and you can download or delete it at the end.', close:'Got it' },
+  landing:{ eyebrow:'House · Tree · Person · Reflection', headline:'Explore yourself through house, tree, and person symbols.', sub:'You can draw them yourself or choose images that feel meaningful to you. This experience is for self-reflection, not diagnosis.', recNote:'Your whole process is recorded for expert review', start:'Start reflection', learn:'Learn more', s1t:'Draw or choose', s1d:'A house, a tree, and a person — in your own way.', s2t:'Reflect in words', s2d:'Answer a few gentle questions about each one.', s3t:'Talk it through', s3d:'A chatbot helps you notice — never diagnoses.' },
+  consent:{ eyebrow:'Step 1 — Consent', title:'Before we begin', intro:'This is a self-reflection experience, not a clinical or diagnostic test. Please read and confirm the following.', recEyebrow:'What is recorded', recBody:'Your full process is recorded: your drawings, the order and timing of your strokes, the images you choose, your written answers, and your chat with the AI. This record is kept so a qualified expert can review it later.', i1:'I understand this is a self-reflection experience and not a clinical diagnosis.', i2:'I understand my whole process — drawings, drawing order and timing, image choices, written answers, and chat — is recorded for this session.', i3:'I understand the AI does not provide a final interpretation, and that meaningful interpretation requires expert review.', i4:'Optional: I allow my anonymized session to be used for research.' },
+  survey:{ eyebrow:'Step 2 — A few anonymous details', title:'A little about you', sub:'No real name is needed. This helps an expert read your session in context. Answer only what you wish.', qAge:'Age range', qGender:'Gender', qMood:'Mood right now', qComfort:'Comfort with drawing', female:'Female', male:'Male', nonbinary:'Non-binary', na:'Prefer not to say', selfdesc:'Self-describe', calm:'Calm', tired:'Tired', curious:'Curious', anxious:'Anxious', hopeful:'Hopeful', other:'Other', comfortable:'Comfortable', neutral:'Neutral', notconf:'Not confident' },
+  mode:{ eyebrow:'Step 3 — Choose how to reflect', title:'How would you like to begin?', sub:'Each path moves through house, tree, and person. There is no right choice — pick what feels natural.', bestFor:'Best for', drawT:'Draw your own', drawD:'Use a simple black pen and eraser to draw a house, a tree, and a person.', drawB:'expressive, process-based reflection', imgT:'Choose meaningful images', imgD:'Like a vision board — select or upload images of a house, tree, and person that feel close to you.', imgB:'visual preference & symbolic choice', hybT:'Draw + choose', hybD:'Draw each symbol first, then choose an image that resonates with it.', hybB:'comparing expression and selection', recordingNote:'Whichever you choose, your process is recorded for later expert review.' },
+  task:{ step1:'Step 1 of 3 · House', step2:'Step 2 of 3 · Tree', step3:'Step 3 of 3 · Person', pen:'Pen', eraser:'Eraser', undo:'Undo', clear:'Clear', capturing:'Recording your process', strokes:'strokes', askHint:'There is no right way — draw it however you like.', drawHouse:'Please draw a house. It does not need to be artistic — draw it in your own way.', drawTree:'Please draw a tree. It does not need to be realistic — draw it naturally.', drawPerson:'Please draw a whole person, not only a head or face. It does not need to be perfect.', toImage:'Now choose an image' },
+  image:{ instruction:'Choose the image that feels most meaningful to you right now. You do not need to explain it perfectly.', house:'Choose a house that feels meaningful', tree:'Choose a tree that feels meaningful', person:'Choose a person that feels meaningful', curatedLabel:'Or pick a starting point from the curated set', searchUnsplash:'Search Unsplash', searchGoogle:'Search Google', upload:'Upload your own', chosen:'Your choice', srcUpload:'Uploaded image', srcCurated:'Curated set' },
+  followup:{ title:'A few words on what you made', sub:'Your own explanation matters more than the image alone. Write freely — short is fine.', placeholder:'Write in your own words…', toReflect:'See my reflection' },
+  fq:{ house1:'Whose house is this, or who might live here?', house2:'What is the weather or atmosphere around this house?', house3:'What does this house need?', house4:'Why did you draw or choose this house?', tree1:'What type of tree is this, and where does it live?', tree2:'What is this tree feeling?', tree3:'What does this tree need?', tree4:'Why did you draw or choose this tree?', person1:'Who might this person be, and what are they doing?', person2:'What is this person feeling?', person3:'What does this person need?', person4:'Why did you draw or choose this person?', hyb1:'How is your drawing similar to the image you chose?', hyb2:'How is it different?', hyb3:'Which one feels closer to you right now?' },
+  reflect:{ loadingTitle:'Organizing your session…', loadingSub:'Gathering observations, your words, and reflection questions.', badge:'Expert review needed', title:'Your reflection, organized', disclaimer:'This experience uses AI to organize visual observations, your explanations, and reflective questions. The AI does not provide a final psychological interpretation — any meaningful interpretation should be reviewed by a qualified expert in context.', s1:'What can be observed', s2:'Your words matter', s3:'Symbolic reflection prompts', s4:'Questions to sit with', s5:'Preliminary summary for expert review', s6:'A small action', prelimTag:'Preliminary · not a final interpretation', safetyTitle:'Safety note', safety:'This reflection is not a diagnosis. It is a symbolic reading based on your drawings or image choices and your own explanations, prepared for review by a qualified expert.', openChat:'Continue with the chatbot', toExport:'Skip to export' },
+  chat:{ title:'Reflect together', sub:'Ask anything about your session. I can help you notice and organize — but I will not give a final interpretation.', greeting:'I have gathered your house, tree, and person, along with your own words. Where would you like to begin? I can help you notice patterns, but your explanations matter most.', thinking:'thinking', quick:['Ask me one deeper question','Compare my house, tree and person','Summarize my current theme','Give me a gentle action step','What should I explore next?'], placeholder:'Type your message…', finish:'Finish & export', fallback:'I can help you notice features, summarize your own words, and suggest reflection questions — but I cannot give a final psychological interpretation. A qualified expert should review this in context. (Live AI is unavailable right now.)' },
+  export:{ eyebrow:'Step 4 — Save & share', title:'Your reflection card', sub:'A summary of your session, ready to keep or hand to an expert reviewer. The full record can be downloaded as data.', processLabel:'Recorded process', themeLabel:'A question to carry', id:'ID', cardSafety:'Not a diagnosis. Prepared for expert review.', print:'Print / save as PDF', download:'Download session data', restart:'Start over', dataNote:'Stored: anonymous demographics, drawings, selected images, follow-up answers, and AI chat history — under a random ID with no real name. You can download or discard it here.' }
+};
+
+const KO_OVER={
+  common:{ continue:'계속하기', back:'뒤로', next:'다음 상징' },
+  sym:{ house:'집', tree:'나무', person:'사람' },
+  modeName:{ draw:'그리기 모드', image:'이미지 선택 모드', hybrid:'혼합 모드' },
+  header:{ rec:'기록 중', recHint:'그림, 선택, 시간, 답변, 대화 등 전체 과정이 전문가 검토를 위해 기록됩니다.', about:'이 경험 소개', aiSettings:'AI / GPT 설정' },
+  ai:{ eyebrow:'AI 연결', title:'Claude 대신 GPT/OpenAI 사용', body:'이 프로토타입은 환경에 GPT/OpenAI 브리지가 있으면 그것을 사용하고, 로컬 테스트용 OpenAI 호환 API 키도 사용할 수 있습니다. 실시간 모델이 없으면 안전한 기본 문구로 대체됩니다.', status:'현재 연결', provider:'제공자', model:'모델', endpoint:'엔드포인트', key:'OpenAI 호환 API 키', note:'운영 환경에서는 브라우저에 API 키를 노출하지 마세요. 작은 백엔드 프록시를 사용하는 것이 안전합니다. 이 설정은 개인 프로토타입 테스트용입니다.', privacy:'AI는 관찰과 성찰 보조자일 뿐입니다. 최종 해석은 여전히 전문가 검토가 필요합니다.', save:'설정 저장', clear:'지우기', close:'닫기', statusGPT:'GPT/OpenAI 키 준비됨', statusBridge:'GPT/OpenAI 브리지 감지됨', statusClaude:'Claude 헬퍼 감지됨', statusMissing:'선택한 헬퍼가 없습니다', statusFallback:'기본 문구 모드' },
+  about:{ eyebrow:'이 경험 소개', title:'상징을 통한 자기 성찰 경험', p1:'집-나무-사람(HTP) 과제에서 영감을 받은 자기 성찰 경험입니다. 집, 나무, 사람을 그리거나 선택하고, 자신의 언어로 성찰하는 동안 챗봇이 부드러운 질문을 건넵니다.', p2:'임상 검사가 아니라, 의미 있는 이미지를 고르는 비전 보드/드림 보드 만들기에서 영감을 받았습니다.', expertTitle:'AI는 최종 해석을 하지 않습니다', expertBody:'AI는 관찰 내용을 정리하고 사용자의 말을 요약하며 질문을 제안합니다. 의미 있는 해석은 반드시 전문가가 맥락을 고려해 검토해야 합니다.', privacy:'실명은 수집하지 않습니다. 세션은 임의의 ID로 익명 저장되며 마지막에 내려받거나 삭제할 수 있습니다.', close:'확인' },
+  landing:{ eyebrow:'집 · 나무 · 사람 · 성찰', headline:'집, 나무, 사람의 상징으로 나를 탐색해보세요.', sub:'직접 그리거나, 당신에게 의미 있게 느껴지는 이미지를 선택할 수 있습니다. 이 경험은 진단이 아닌 자기 성찰을 위한 것입니다.', recNote:'전체 과정이 전문가 검토를 위해 기록됩니다', start:'성찰 시작하기', learn:'자세히 보기', s1t:'그리거나 선택', s1d:'집, 나무, 사람을 당신의 방식으로.', s2t:'언어로 성찰', s2d:'각각에 대해 부드러운 질문에 답합니다.', s3t:'대화로 풀기', s3d:'챗봇이 알아차리도록 돕고, 진단하지 않습니다.' },
+  consent:{ eyebrow:'1단계 — 동의', title:'시작하기 전에', intro:'이것은 임상·진단 검사가 아니라 자기 성찰 경험입니다. 아래 내용을 읽고 확인해 주세요.', recEyebrow:'무엇이 기록되나요', recBody:'그림, 획의 순서와 시간, 선택한 이미지, 작성한 답변, AI와의 대화 등 전체 과정이 기록됩니다. 이 기록은 전문가가 나중에 검토할 수 있도록 보관됩니다.', i1:'이것이 임상 진단이 아니라 자기 성찰 경험임을 이해합니다.', i2:'그림, 그리는 순서와 시간, 이미지 선택, 답변, 대화 등 전체 과정이 이 세션 동안 기록됨을 이해합니다.', i3:'AI가 최종 해석을 제공하지 않으며, 의미 있는 해석에는 전문가 검토가 필요함을 이해합니다.', i4:'선택: 익명화된 세션을 연구에 사용하는 것에 동의합니다.' },
+  survey:{ eyebrow:'2단계 — 익명 정보', title:'당신에 대해 조금', sub:'실명은 필요 없습니다. 전문가가 맥락 속에서 세션을 읽는 데 도움이 됩니다. 원하는 항목만 답해주세요.', qAge:'연령대', qGender:'성별', qMood:'지금 기분', qComfort:'그림에 대한 편안함', female:'여성', male:'남성', nonbinary:'논바이너리', na:'답하지 않음', selfdesc:'직접 입력', calm:'차분함', tired:'피곤함', curious:'호기심', anxious:'불안함', hopeful:'희망적', other:'기타', comfortable:'편안함', neutral:'보통', notconf:'자신 없음' },
+  mode:{ eyebrow:'3단계 — 성찰 방식 선택', title:'어떻게 시작할까요?', sub:'모든 방식은 집, 나무, 사람을 거칩니다. 정답은 없으니 자연스러운 것을 고르세요.', bestFor:'적합:', drawT:'직접 그리기', drawD:'간단한 검은 펜과 지우개로 집, 나무, 사람을 그립니다.', drawB:'표현적·과정 중심 성찰', imgT:'의미 있는 이미지 선택', imgD:'비전 보드처럼, 당신에게 가까운 집·나무·사람 이미지를 선택하거나 업로드합니다.', imgB:'시각적 선호와 상징적 선택', hybT:'그리기 + 선택', hybD:'각 상징을 먼저 그린 뒤, 공명하는 이미지를 선택합니다.', hybB:'표현과 선택의 비교', recordingNote:'어떤 방식이든 전체 과정이 전문가 검토를 위해 기록됩니다.' },
+  task:{ step1:'3단계 중 1 · 집', step2:'3단계 중 2 · 나무', step3:'3단계 중 3 · 사람', pen:'펜', eraser:'지우개', undo:'되돌리기', clear:'지우기', capturing:'과정을 기록 중', strokes:'획', askHint:'정해진 방법은 없어요 — 원하는 대로 그리세요.', drawHouse:'집을 그려주세요. 예술적일 필요는 없어요 — 당신의 방식으로.', drawTree:'나무를 그려주세요. 사실적일 필요는 없어요 — 자연스럽게.', drawPerson:'얼굴만이 아니라 사람 전체를 그려주세요. 완벽하지 않아도 됩니다.', toImage:'이제 이미지를 선택하세요' },
+  image:{ instruction:'지금 당신에게 가장 의미 있게 느껴지는 이미지를 선택하세요. 완벽하게 설명하지 않아도 됩니다.', house:'의미 있게 느껴지는 집을 선택하세요', tree:'의미 있게 느껴지는 나무를 선택하세요', person:'의미 있게 느껴지는 사람을 선택하세요', curatedLabel:'또는 큐레이션된 세트에서 출발점을 고르세요', searchUnsplash:'Unsplash 검색', searchGoogle:'Google 검색', upload:'직접 업로드', chosen:'선택', srcUpload:'업로드한 이미지', srcCurated:'큐레이션 세트' },
+  followup:{ title:'무엇을 만들었는지 몇 마디', sub:'이미지 자체보다 당신의 설명이 더 중요합니다. 짧아도 좋으니 자유롭게 써주세요.', placeholder:'당신의 언어로 적어주세요…', toReflect:'내 성찰 보기' },
+  fq:{ house1:'이 집은 누구의 집이거나 누가 살고 있을까요?', house2:'이 집 주변의 날씨나 분위기는 어떤가요?', house3:'이 집에는 무엇이 필요할까요?', house4:'왜 이 집을 그리거나 선택했나요?', tree1:'이 나무는 어떤 나무이고 어디에 사나요?', tree2:'이 나무는 무엇을 느끼고 있을까요?', tree3:'이 나무에는 무엇이 필요할까요?', tree4:'왜 이 나무를 그리거나 선택했나요?', person1:'이 사람은 누구이며 무엇을 하고 있을까요?', person2:'이 사람은 무엇을 느끼고 있을까요?', person3:'이 사람에게는 무엇이 필요할까요?', person4:'왜 이 사람을 그리거나 선택했나요?', hyb1:'당신의 그림은 선택한 이미지와 어떻게 비슷한가요?', hyb2:'어떻게 다른가요?', hyb3:'지금 어느 쪽이 더 가깝게 느껴지나요?' },
+  reflect:{ loadingTitle:'세션을 정리하는 중…', loadingSub:'관찰 내용, 당신의 말, 성찰 질문을 모으고 있어요.', badge:'전문가 검토 필요', title:'정리된 당신의 성찰', disclaimer:'이 경험은 AI가 시각적 관찰, 당신의 설명, 성찰 질문을 정리합니다. AI는 최종 심리 해석을 제공하지 않으며, 의미 있는 해석은 전문가가 맥락 속에서 검토해야 합니다.', s1:'관찰할 수 있는 것', s2:'당신의 말이 중요합니다', s3:'상징적 성찰 질문', s4:'함께 머물 질문', s5:'전문가 검토용 예비 요약', s6:'작은 행동 하나', prelimTag:'예비 자료 · 최종 해석 아님', safetyTitle:'안전 안내', safety:'이 성찰은 진단이 아닙니다. 당신의 그림 또는 이미지 선택과 설명에 기반한 상징적 읽기이며, 전문가 검토를 위해 준비되었습니다.', openChat:'챗봇과 이어가기', toExport:'내보내기로 건너뛰기' },
+  chat:{ title:'함께 성찰하기', sub:'세션에 대해 무엇이든 물어보세요. 알아차리고 정리하도록 돕지만, 최종 해석은 하지 않습니다.', greeting:'당신의 집, 나무, 사람과 직접 남긴 말을 모았어요. 어디서부터 시작할까요? 패턴을 알아차리도록 돕지만, 당신의 설명이 가장 중요합니다.', thinking:'생각 중', quick:['더 깊은 질문 하나 해줘','내 집·나무·사람 비교해줘','지금 내 주제 요약해줘','부드러운 실천 한 가지','다음엔 무엇을 탐색할까?'], placeholder:'메시지를 입력하세요…', finish:'마치고 내보내기', fallback:'특징을 알아차리고, 당신의 말을 요약하고, 성찰 질문을 제안할 수 있어요 — 하지만 최종 심리 해석은 드릴 수 없습니다. 전문가가 맥락 속에서 검토해야 합니다. (지금 실시간 AI를 사용할 수 없습니다.)' },
+  export:{ eyebrow:'4단계 — 저장 및 공유', title:'당신의 성찰 카드', sub:'세션 요약입니다. 간직하거나 전문가 검토자에게 전달할 수 있습니다. 전체 기록은 데이터로 내려받을 수 있습니다.', processLabel:'기록된 과정', themeLabel:'간직할 질문', id:'ID', cardSafety:'진단이 아닙니다. 전문가 검토를 위해 준비되었습니다.', print:'인쇄 / PDF 저장', download:'세션 데이터 내려받기', restart:'처음부터', dataNote:'저장 항목: 익명 인구통계, 그림, 선택한 이미지, 후속 답변, AI 대화 기록 — 실명 없이 임의 ID로 저장됩니다. 여기서 내려받거나 폐기할 수 있습니다.' }
+};
+function merge(a,b){ const o={...a}; for(const k in b){ o[k]= (b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])) ? merge(a[k]||{},b[k]) : b[k]; } return o; }
+const KO=merge(EN,KO_OVER);
+const DICT={ en:EN, ko:KO };
+</script>
+</body>
+</html>
